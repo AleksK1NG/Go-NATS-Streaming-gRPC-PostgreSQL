@@ -1,0 +1,13 @@
+package constants
+
+const (
+	SERVER_PORT = "SERVER_PORT"
+
+	NATS_URL       = "NATS_URL"
+	CLUSTER_ID     = "CLUSTER_ID"
+	NATS_CLIENT_ID = "NATS_CLIENT_ID"
+
+	MAILHOG        = "MAILHOG"
+	REDIS_URL      = "REDIS_URL"
+	REDIS_PASSWORD = "REDIS_PASSWORD"
+)

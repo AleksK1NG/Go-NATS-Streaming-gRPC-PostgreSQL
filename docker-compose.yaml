@@ -1,0 +1,91 @@
+version: "3.8"
+
+services:
+  microservice_a:
+    container_name: microservice_a
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 5000:5000
+    volumes:
+      - ./:/app
+    environment:
+      - SERVER_PORT=:5000
+      - NATS_CLIENT_ID=microservice_a
+    env_file:
+      - .env
+    restart: always
+    depends_on:
+      - nats-streaming
+    networks:
+      - nats
+
+#  microservice_b:
+#    container_name: microservice_b
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    ports:
+#      - 5555:5555
+#    volumes:
+#      - ./:/app
+#    environment:
+#      - SERVER_PORT=:5555
+#      - NATS_CLIENT_ID=microservice_b
+#    env_file:
+#      - .env
+#    restart: always
+#    depends_on:
+#      - nats-streaming
+#    networks:
+#      - nats
+
+  nginx:
+    container_name: nginx_microservice
+    ports:
+      - 8080:8080
+      - 443:443
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    networks:
+      - nats
+
+  nats-streaming:
+    container_name: nats-streaming
+    image: nats-streaming:latest
+    ports:
+      - "8222:8222"
+      - "4222:4222"
+      - "6222:6222"
+    networks: [ "nats" ]
+    restart: always
+    command: [
+        '-p',
+        '4222',
+        '-m',
+        '8222',
+        '-hbi',
+        '5s',
+        '-hbt',
+        '5s',
+        '-hbf',
+        '2',
+        '-SD',
+        '-cid',
+        'ticketing',
+    ]
+
+  mailhog:
+    container_name: mailhog
+    image: mailhog/mailhog:latest
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    restart: always
+    networks: [ "nats" ]
+
+networks:
+  nats:
+    name: nats

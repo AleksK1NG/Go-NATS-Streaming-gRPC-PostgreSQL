@@ -1,0 +1,39 @@
+AppVersion: 1.0.0
+
+HTTPServer:
+  Port: 5000
+  Development: true
+  Timeout: 15
+  ReadTimeout: 5
+  WriteTimeout: 5
+  MaxConnectionIdle: 5
+  MaxConnectionAge: 5
+
+Logger:
+  DisableCaller: false
+  DisableStacktrace: false
+  Encoding: json
+  Level: info
+
+Nats:
+  URL: "nats://host.docker.internal:4222"
+  ClusterID: microservice
+  ClientID: microservice_a
+
+Metrics:
+  Port: ":7071"
+  Url: "host.docker.internal:7071"
+  ServiceName: nats_microservice
+
+Jaeger:
+  Host: host.docker.internal:6831
+  ServiceName: nats_microservice
+  LogSpans: false
+
+Redis:
+  RedisDb: 0
+  RedisDefaultDB: 0
+  MinIdleConn: 200
+  PoolSize: 12000
+  PoolTimeout: 240
+  DB: 0
