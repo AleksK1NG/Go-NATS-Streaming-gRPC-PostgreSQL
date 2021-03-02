@@ -4,7 +4,10 @@ import (
 	"log"
 
 	"github.com/AleksK1NG/nats-streaming/config"
+	"github.com/AleksK1NG/nats-streaming/pkg/jaeger"
 	"github.com/AleksK1NG/nats-streaming/pkg/logger"
+	"github.com/AleksK1NG/nats-streaming/pkg/redis"
+	"github.com/opentracing/opentracing-go"
 )
 
 func main() {
@@ -25,4 +28,21 @@ func main() {
 		cfg.HTTP.Development,
 	)
 	appLogger.Infof("Success parsed config: %+v", cfg.AppVersion)
+
+	tracer, closer, err := jaeger.InitJaeger(cfg)
+	if err != nil {
+		appLogger.Fatal("cannot create tracer", err)
+	}
+	appLogger.Info("Jaeger connected")
+
+	opentracing.SetGlobalTracer(tracer)
+	defer closer.Close()
+	appLogger.Info("Opentracing connected")
+
+	client, err := redis.NewRedisClient(cfg)
+	if err != nil {
+		appLogger.Fatalf("NewRedisClient: %+v", err)
+	}
+
+	appLogger.Infof("Redis connected: %+v", client.PoolStats())
 }

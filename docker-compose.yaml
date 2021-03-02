@@ -21,25 +21,25 @@ services:
     networks:
       - nats
 
-#  microservice_b:
-#    container_name: microservice_b
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
-#    ports:
-#      - 5555:5555
-#    volumes:
-#      - ./:/app
-#    environment:
-#      - SERVER_PORT=:5555
-#      - NATS_CLIENT_ID=microservice_b
-#    env_file:
-#      - .env
-#    restart: always
-#    depends_on:
-#      - nats-streaming
-#    networks:
-#      - nats
+  #  microservice_b:
+  #    container_name: microservice_b
+  #    build:
+  #      context: .
+  #      dockerfile: Dockerfile
+  #    ports:
+  #      - 5555:5555
+  #    volumes:
+  #      - ./:/app
+  #    environment:
+  #      - SERVER_PORT=:5555
+  #      - NATS_CLIENT_ID=microservice_b
+  #    env_file:
+  #      - .env
+  #    restart: always
+  #    depends_on:
+  #      - nats-streaming
+  #    networks:
+  #      - nats
 
   nginx:
     container_name: nginx_microservice
@@ -74,7 +74,7 @@ services:
         '2',
         '-SD',
         '-cid',
-        'ticketing',
+        'microservice',
     ]
 
   mailhog:
@@ -85,6 +85,66 @@ services:
       - "8025:8025"
     restart: always
     networks: [ "nats" ]
+
+
+  redis:
+    image: redis:6-alpine
+    restart: always
+    container_name: user_redis
+    ports:
+      - "6379:6379"
+    networks: [ "nats" ]
+
+  prometheus:
+    container_name: prometheus_container
+    restart: always
+    image: prom/prometheus
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:Z
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention=20d'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    ports:
+      - '9090:9090'
+    networks: [ "nats" ]
+
+  node_exporter:
+    container_name: node_exporter_container
+    restart: always
+    image: prom/node-exporter
+    ports:
+      - '9101:9100'
+    networks: [ "nats" ]
+
+  grafana:
+    container_name: grafana_container
+    restart: always
+    image: grafana/grafana
+    ports:
+      - '3000:3000'
+    networks: [ "nats" ]
+
+
+  jaeger:
+    container_name: jaeger_container
+    restart: always
+    image: jaegertracing/all-in-one:1.21
+    environment:
+      - COLLECTOR_ZIPKIN_HTTP_PORT=9411
+    ports:
+      - 5775:5775/udp
+      - 6831:6831/udp
+      - 6832:6832/udp
+      - 5778:5778
+      - 16686:16686
+      - 14268:14268
+      - 14250:14250
+      - 9411:9411
+    networks: [ "nats" ]
+
 
 networks:
   nats:

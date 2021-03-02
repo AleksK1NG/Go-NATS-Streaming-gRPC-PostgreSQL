@@ -11,12 +11,14 @@ import (
 
 // Config
 type Config struct {
-	AppVersion string
-	HTTP       HTTP
-	Logger     Logger
-	Metrics    Metrics
-	Jaeger     Jaeger
-	Nats       Nats
+	AppVersion  string
+	HTTP        HTTP
+	Logger      Logger
+	Metrics     Metrics
+	Jaeger      Jaeger
+	Nats        Nats
+	Redis       Redis
+	MailService MailService
 }
 
 // HTTP
@@ -53,6 +55,8 @@ type Jaeger struct {
 }
 
 type Redis struct {
+	RedisAddr      string
+	RedisPassword  string
 	RedisDB        string
 	RedisDefaultDB string
 	MinIdleConn    int
@@ -65,6 +69,11 @@ type Nats struct {
 	URL       string
 	ClusterID string
 	ClientID  string
+}
+
+type MailService struct {
+	URL  string
+	From string
 }
 
 func exportConfig() error {
@@ -107,6 +116,20 @@ func ParseConfig() (*Config, error) {
 	natsClusterID := os.Getenv(constants.CLUSTER_ID)
 	if httpPort != "" {
 		c.Nats.ClusterID = natsClusterID
+	}
+
+	redisURL := os.Getenv(constants.REDIS_URL)
+	if redisURL != "" {
+		c.Redis.RedisAddr = redisURL
+	}
+	redisPassword := os.Getenv(constants.REDIS_PASSWORD)
+	if redisURL != "" {
+		c.Redis.RedisPassword = redisPassword
+	}
+
+	mailServiceURL := os.Getenv(constants.MAIL_SERVICE)
+	if redisURL != "" {
+		c.MailService.URL = mailServiceURL
 	}
 
 	return &c, nil
