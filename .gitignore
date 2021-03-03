@@ -2,3 +2,4 @@
 .env
 vendor
 main
+mails_pgdata

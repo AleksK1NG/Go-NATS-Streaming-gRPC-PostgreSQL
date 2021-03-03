@@ -71,3 +71,24 @@ logs-local:
 cert:
 	echo "Generating SSL certificates"
 	cd ./ssl && sh instructions.sh
+
+
+# ==============================================================================
+# Go migrate postgresql
+
+DB_NAME = user_db
+DB_HOST = localhost
+DB_PORT = 5432
+SSL_MODE = disable
+
+force_user_db:
+	migrate -database postgres://postgres:postgres@$(DB_HOST):$(DB_PORT)/$(DB_NAME)?sslmode=$(SSL_MODE) -path migrations force 1
+
+version_user_db:
+	migrate -database postgres://postgres:postgres@$(DB_HOST):$(DB_PORT)/$(DB_NAME)?sslmode=$(SSL_MODE) -path migrations version
+
+migrate_user_db_up:
+	migrate -database postgres://postgres:postgres@$(DB_HOST):$(DB_PORT)/$(DB_NAME)?sslmode=$(SSL_MODE) -path migrations up 1
+
+migrate_user_db_down:
+	migrate -database postgres://postgres:postgres@$(DB_HOST):$(DB_PORT)/$(DB_NAME)?sslmode=$(SSL_MODE) -path migrations down 1
