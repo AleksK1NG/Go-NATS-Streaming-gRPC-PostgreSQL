@@ -26,7 +26,7 @@ Metrics:
   ServiceName: nats_microservice
 
 Jaeger:
-  Host: host.docker.internal:6831
+  Host: localhost:6831
   ServiceName: nats_microservice
   LogSpans: false
 
@@ -42,3 +42,12 @@ Redis:
 MailService:
   URL: "localhost:1025"
   From: "alexander.bryksin@yandex.ru"
+
+PostgreSQL:
+  PostgresqlHost: localhost
+  PostgresqlPort: 5432
+  PostgresqlUser: postgres
+  PostgresqlPassword: postgres
+  PostgresqlDBName: mails_db
+  PostgresqlSslmode: "disable"
+  PgDriver: pgx

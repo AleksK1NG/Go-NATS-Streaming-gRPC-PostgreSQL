@@ -19,6 +19,7 @@ type Config struct {
 	Nats        Nats
 	Redis       Redis
 	MailService MailService
+	PostgreSQL  PostgreSQL
 }
 
 // HTTP
@@ -76,6 +77,17 @@ type MailService struct {
 	From string
 }
 
+// Postgresql config
+type PostgreSQL struct {
+	PostgresqlHost     string
+	PostgresqlPort     string
+	PostgresqlUser     string
+	PostgresqlPassword string
+	PostgresqlDBName   string
+	PostgresqlSSLMode  string
+	PgDriver           string
+}
+
 func exportConfig() error {
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath("./config")
@@ -130,6 +142,40 @@ func ParseConfig() (*Config, error) {
 	mailServiceURL := os.Getenv(constants.MAIL_SERVICE)
 	if redisURL != "" {
 		c.MailService.URL = mailServiceURL
+	}
+
+	postgresPORT := os.Getenv(constants.POSTGRES_HOST)
+	if redisURL != "" {
+		c.PostgreSQL.PostgresqlHost = postgresPORT
+	}
+	postgresHost := os.Getenv(constants.POSTGRES_HOST)
+	if redisURL != "" {
+		c.PostgreSQL.PostgresqlHost = postgresHost
+	}
+	postgresqlPort := os.Getenv(constants.POSTGRES_PORT)
+	if redisURL != "" {
+		c.PostgreSQL.PostgresqlPort = postgresqlPort
+	}
+	postgresUser := os.Getenv(constants.POSTGRES_USER)
+	if redisURL != "" {
+		c.PostgreSQL.PostgresqlUser = postgresUser
+	}
+	postgresPassword := os.Getenv(constants.POSTGRES_PASSWORD)
+	if redisURL != "" {
+		c.PostgreSQL.PostgresqlPassword = postgresPassword
+	}
+	postgresDB := os.Getenv(constants.POSTGRES_DB)
+	if redisURL != "" {
+		c.PostgreSQL.PostgresqlDBName = postgresDB
+	}
+	postgresSSL := os.Getenv(constants.POSTGRES_SSL)
+	if redisURL != "" {
+		c.PostgreSQL.PostgresqlSSLMode = postgresSSL
+	}
+
+	jaegerHost := os.Getenv(constants.JAEGER_HOST)
+	if redisURL != "" {
+		c.Jaeger.Host = jaegerHost
 	}
 
 	return &c, nil

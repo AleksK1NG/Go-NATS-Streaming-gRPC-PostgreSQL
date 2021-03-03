@@ -8,6 +8,7 @@ import (
 	"github.com/AleksK1NG/nats-streaming/pkg/jaeger"
 	"github.com/AleksK1NG/nats-streaming/pkg/logger"
 	"github.com/AleksK1NG/nats-streaming/pkg/nats"
+	"github.com/AleksK1NG/nats-streaming/pkg/postgresql"
 	"github.com/AleksK1NG/nats-streaming/pkg/redis"
 	"github.com/opentracing/opentracing-go"
 )
@@ -59,6 +60,12 @@ func main() {
 		natsConn.NatsConn().ConnectedUrl(),
 		natsConn.NatsConn().ConnectedServerId(),
 	)
+
+	pgxPool, err := postgresql.NewPgxConn(cfg)
+	if err != nil {
+		appLogger.Fatalf("NewPgxConn: %+v", err)
+	}
+	appLogger.Infof("PostgreSQL connected: %+v", pgxPool.Stat().TotalConns())
 
 	if err := http.ListenAndServe(":5000", nil); err != nil {
 		appLogger.Fatalf("ListenAndServe: %+v", err)

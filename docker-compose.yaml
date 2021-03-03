@@ -78,6 +78,24 @@ services:
         'microservice',
     ]
 
+  mails_postgesql:
+    image: postgres:13-alpine
+    container_name: mails_postgesql
+    expose:
+      - "5432"
+    ports:
+      - "5432:5432"
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=mails_db
+      - POSTGRES_HOST=5432
+    command: -p 5432
+    volumes:
+      - ./mails_pgdata:/var/lib/postgresql/data
+    networks: [ "nats" ]
+
   mailhog:
     container_name: mailhog
     image: mailhog/mailhog:latest
