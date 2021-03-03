@@ -7,6 +7,7 @@ import (
 	"github.com/AleksK1NG/nats-streaming/config"
 	"github.com/AleksK1NG/nats-streaming/pkg/jaeger"
 	"github.com/AleksK1NG/nats-streaming/pkg/logger"
+	"github.com/AleksK1NG/nats-streaming/pkg/nats"
 	"github.com/AleksK1NG/nats-streaming/pkg/redis"
 	"github.com/opentracing/opentracing-go"
 )
@@ -46,6 +47,18 @@ func main() {
 	}
 
 	appLogger.Infof("Redis connected: %+v", client.PoolStats())
+
+	natsConn, err := nats.NewNatsConnect(cfg)
+	if err != nil {
+		appLogger.Fatalf("NewRedisClient: %+v", err)
+	}
+	appLogger.Infof(
+		"Nats Connected: Status: %+v IsConnected: %v ConnectedUrl: %v ConnectedServerId: %v",
+		natsConn.NatsConn().Status(),
+		natsConn.NatsConn().IsConnected(),
+		natsConn.NatsConn().ConnectedUrl(),
+		natsConn.NatsConn().ConnectedServerId(),
+	)
 
 	if err := http.ListenAndServe(":5000", nil); err != nil {
 		appLogger.Fatalf("ListenAndServe: %+v", err)
