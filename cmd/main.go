@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"net/http"
 
 	"github.com/AleksK1NG/nats-streaming/config"
 	"github.com/AleksK1NG/nats-streaming/pkg/jaeger"
@@ -45,4 +46,8 @@ func main() {
 	}
 
 	appLogger.Infof("Redis connected: %+v", client.PoolStats())
+
+	if err := http.ListenAndServe(":5000", nil); err != nil {
+		appLogger.Fatalf("ListenAndServe: %+v", err)
+	}
 }

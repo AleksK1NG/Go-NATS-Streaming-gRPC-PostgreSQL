@@ -1,2 +1,4 @@
 .idea
 .env
+vendor
+main

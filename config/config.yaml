@@ -16,7 +16,7 @@ Logger:
   Level: info
 
 Nats:
-  URL: "nats://host.docker.internal:4222"
+  URL: "localhost:4222"
   ClusterID: microservice
   ClientID: microservice_a
 
@@ -31,7 +31,7 @@ Jaeger:
   LogSpans: false
 
 Redis:
-  RedisAddr: "host.docker.internal:6379"
+  RedisAddr: "localhost:6379"
   RedisPassword:
   RedisDefaultDB: 0
   MinIdleConn: 200
@@ -40,5 +40,5 @@ Redis:
   DB: 0
 
 MailService:
-  URL: "host.docker.internal:1025"
+  URL: "localhost:1025"
   From: "alexander.bryksin@yandex.ru"

@@ -7,6 +7,10 @@ develop:
 	echo "Starting develop docker compose"
 	docker-compose -f docker-compose.yaml up --build
 
+local:
+	echo "Starting develop docker compose"
+	docker-compose -f docker-compose.local.yaml up --build
+
 upload:
 	docker build -t alexanderbryksin/stan_microservice:latest -f ./Dockerfile .
 	docker push alexanderbryksin/stan_microservice:latest
