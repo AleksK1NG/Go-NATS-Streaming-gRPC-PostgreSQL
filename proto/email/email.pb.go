@@ -570,21 +570,21 @@ var file_email_proto_rawDesc = []byte{
 	0x61, 0x73, 0x4d, 0x6f, 0x72, 0x65, 0x12, 0x2b, 0x0a, 0x06, 0x45, 0x6d, 0x61, 0x69, 0x6c, 0x73,
 	0x18, 0x06, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x13, 0x2e, 0x65, 0x6d, 0x61, 0x69, 0x6c, 0x53, 0x65,
 	0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x45, 0x6d, 0x61, 0x69, 0x6c, 0x52, 0x06, 0x45, 0x6d, 0x61,
-	0x69, 0x6c, 0x73, 0x32, 0xce, 0x01, 0x0a, 0x0f, 0x50, 0x72, 0x6f, 0x64, 0x75, 0x63, 0x74, 0x73,
-	0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x3c, 0x0a, 0x06, 0x43, 0x72, 0x65, 0x61, 0x74,
-	0x65, 0x12, 0x17, 0x2e, 0x65, 0x6d, 0x61, 0x69, 0x6c, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65,
-	0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x52, 0x65, 0x71, 0x1a, 0x17, 0x2e, 0x65, 0x6d, 0x61,
-	0x69, 0x6c, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65,
-	0x52, 0x65, 0x73, 0x22, 0x00, 0x12, 0x3f, 0x0a, 0x07, 0x47, 0x65, 0x74, 0x42, 0x79, 0x49, 0x44,
-	0x12, 0x18, 0x2e, 0x65, 0x6d, 0x61, 0x69, 0x6c, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e,
-	0x47, 0x65, 0x74, 0x42, 0x79, 0x49, 0x44, 0x52, 0x65, 0x71, 0x1a, 0x18, 0x2e, 0x65, 0x6d, 0x61,
-	0x69, 0x6c, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x47, 0x65, 0x74, 0x42, 0x79, 0x49,
-	0x44, 0x52, 0x65, 0x73, 0x22, 0x00, 0x12, 0x3c, 0x0a, 0x06, 0x53, 0x65, 0x61, 0x72, 0x63, 0x68,
-	0x12, 0x17, 0x2e, 0x65, 0x6d, 0x61, 0x69, 0x6c, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e,
-	0x53, 0x65, 0x61, 0x72, 0x63, 0x68, 0x52, 0x65, 0x71, 0x1a, 0x17, 0x2e, 0x65, 0x6d, 0x61, 0x69,
-	0x6c, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x53, 0x65, 0x61, 0x72, 0x63, 0x68, 0x52,
-	0x65, 0x73, 0x22, 0x00, 0x42, 0x10, 0x5a, 0x0e, 0x2e, 0x3b, 0x65, 0x6d, 0x61, 0x69, 0x6c, 0x53,
-	0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x69, 0x6c, 0x73, 0x32, 0xcb, 0x01, 0x0a, 0x0c, 0x45, 0x6d, 0x61, 0x69, 0x6c, 0x53, 0x65, 0x72,
+	0x76, 0x69, 0x63, 0x65, 0x12, 0x3c, 0x0a, 0x06, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x12, 0x17,
+	0x2e, 0x65, 0x6d, 0x61, 0x69, 0x6c, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x43, 0x72,
+	0x65, 0x61, 0x74, 0x65, 0x52, 0x65, 0x71, 0x1a, 0x17, 0x2e, 0x65, 0x6d, 0x61, 0x69, 0x6c, 0x53,
+	0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x52, 0x65, 0x73,
+	0x22, 0x00, 0x12, 0x3f, 0x0a, 0x07, 0x47, 0x65, 0x74, 0x42, 0x79, 0x49, 0x44, 0x12, 0x18, 0x2e,
+	0x65, 0x6d, 0x61, 0x69, 0x6c, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x47, 0x65, 0x74,
+	0x42, 0x79, 0x49, 0x44, 0x52, 0x65, 0x71, 0x1a, 0x18, 0x2e, 0x65, 0x6d, 0x61, 0x69, 0x6c, 0x53,
+	0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x47, 0x65, 0x74, 0x42, 0x79, 0x49, 0x44, 0x52, 0x65,
+	0x73, 0x22, 0x00, 0x12, 0x3c, 0x0a, 0x06, 0x53, 0x65, 0x61, 0x72, 0x63, 0x68, 0x12, 0x17, 0x2e,
+	0x65, 0x6d, 0x61, 0x69, 0x6c, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x53, 0x65, 0x61,
+	0x72, 0x63, 0x68, 0x52, 0x65, 0x71, 0x1a, 0x17, 0x2e, 0x65, 0x6d, 0x61, 0x69, 0x6c, 0x53, 0x65,
+	0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x53, 0x65, 0x61, 0x72, 0x63, 0x68, 0x52, 0x65, 0x73, 0x22,
+	0x00, 0x42, 0x10, 0x5a, 0x0e, 0x2e, 0x3b, 0x65, 0x6d, 0x61, 0x69, 0x6c, 0x53, 0x65, 0x72, 0x76,
+	0x69, 0x63, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -616,12 +616,12 @@ var file_email_proto_depIdxs = []int32{
 	0, // 1: emailService.CreateRes.Email:type_name -> emailService.Email
 	0, // 2: emailService.GetByIDRes.Email:type_name -> emailService.Email
 	0, // 3: emailService.SearchRes.Emails:type_name -> emailService.Email
-	2, // 4: emailService.ProductsService.Create:input_type -> emailService.CreateReq
-	4, // 5: emailService.ProductsService.GetByID:input_type -> emailService.GetByIDReq
-	6, // 6: emailService.ProductsService.Search:input_type -> emailService.SearchReq
-	3, // 7: emailService.ProductsService.Create:output_type -> emailService.CreateRes
-	5, // 8: emailService.ProductsService.GetByID:output_type -> emailService.GetByIDRes
-	7, // 9: emailService.ProductsService.Search:output_type -> emailService.SearchRes
+	2, // 4: emailService.EmailService.Create:input_type -> emailService.CreateReq
+	4, // 5: emailService.EmailService.GetByID:input_type -> emailService.GetByIDReq
+	6, // 6: emailService.EmailService.Search:input_type -> emailService.SearchReq
+	3, // 7: emailService.EmailService.Create:output_type -> emailService.CreateRes
+	5, // 8: emailService.EmailService.GetByID:output_type -> emailService.GetByIDRes
+	7, // 9: emailService.EmailService.Search:output_type -> emailService.SearchRes
 	7, // [7:10] is the sub-list for method output_type
 	4, // [4:7] is the sub-list for method input_type
 	4, // [4:4] is the sub-list for extension type_name
@@ -760,144 +760,144 @@ var _ grpc.ClientConnInterface
 // is compatible with the grpc package it is being compiled against.
 const _ = grpc.SupportPackageIsVersion6
 
-// ProductsServiceClient is the client API for ProductsService service.
+// EmailServiceClient is the client API for EmailService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
-type ProductsServiceClient interface {
+type EmailServiceClient interface {
 	Create(ctx context.Context, in *CreateReq, opts ...grpc.CallOption) (*CreateRes, error)
 	GetByID(ctx context.Context, in *GetByIDReq, opts ...grpc.CallOption) (*GetByIDRes, error)
 	Search(ctx context.Context, in *SearchReq, opts ...grpc.CallOption) (*SearchRes, error)
 }
 
-type productsServiceClient struct {
+type emailServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewProductsServiceClient(cc grpc.ClientConnInterface) ProductsServiceClient {
-	return &productsServiceClient{cc}
+func NewEmailServiceClient(cc grpc.ClientConnInterface) EmailServiceClient {
+	return &emailServiceClient{cc}
 }
 
-func (c *productsServiceClient) Create(ctx context.Context, in *CreateReq, opts ...grpc.CallOption) (*CreateRes, error) {
+func (c *emailServiceClient) Create(ctx context.Context, in *CreateReq, opts ...grpc.CallOption) (*CreateRes, error) {
 	out := new(CreateRes)
-	err := c.cc.Invoke(ctx, "/emailService.ProductsService/Create", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/emailService.EmailService/Create", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *productsServiceClient) GetByID(ctx context.Context, in *GetByIDReq, opts ...grpc.CallOption) (*GetByIDRes, error) {
+func (c *emailServiceClient) GetByID(ctx context.Context, in *GetByIDReq, opts ...grpc.CallOption) (*GetByIDRes, error) {
 	out := new(GetByIDRes)
-	err := c.cc.Invoke(ctx, "/emailService.ProductsService/GetByID", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/emailService.EmailService/GetByID", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *productsServiceClient) Search(ctx context.Context, in *SearchReq, opts ...grpc.CallOption) (*SearchRes, error) {
+func (c *emailServiceClient) Search(ctx context.Context, in *SearchReq, opts ...grpc.CallOption) (*SearchRes, error) {
 	out := new(SearchRes)
-	err := c.cc.Invoke(ctx, "/emailService.ProductsService/Search", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/emailService.EmailService/Search", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// ProductsServiceServer is the server API for ProductsService service.
-type ProductsServiceServer interface {
+// EmailServiceServer is the server API for EmailService service.
+type EmailServiceServer interface {
 	Create(context.Context, *CreateReq) (*CreateRes, error)
 	GetByID(context.Context, *GetByIDReq) (*GetByIDRes, error)
 	Search(context.Context, *SearchReq) (*SearchRes, error)
 }
 
-// UnimplementedProductsServiceServer can be embedded to have forward compatible implementations.
-type UnimplementedProductsServiceServer struct {
+// UnimplementedEmailServiceServer can be embedded to have forward compatible implementations.
+type UnimplementedEmailServiceServer struct {
 }
 
-func (*UnimplementedProductsServiceServer) Create(context.Context, *CreateReq) (*CreateRes, error) {
+func (*UnimplementedEmailServiceServer) Create(context.Context, *CreateReq) (*CreateRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Create not implemented")
 }
-func (*UnimplementedProductsServiceServer) GetByID(context.Context, *GetByIDReq) (*GetByIDRes, error) {
+func (*UnimplementedEmailServiceServer) GetByID(context.Context, *GetByIDReq) (*GetByIDRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetByID not implemented")
 }
-func (*UnimplementedProductsServiceServer) Search(context.Context, *SearchReq) (*SearchRes, error) {
+func (*UnimplementedEmailServiceServer) Search(context.Context, *SearchReq) (*SearchRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Search not implemented")
 }
 
-func RegisterProductsServiceServer(s *grpc.Server, srv ProductsServiceServer) {
-	s.RegisterService(&_ProductsService_serviceDesc, srv)
+func RegisterEmailServiceServer(s *grpc.Server, srv EmailServiceServer) {
+	s.RegisterService(&_EmailService_serviceDesc, srv)
 }
 
-func _ProductsService_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _EmailService_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ProductsServiceServer).Create(ctx, in)
+		return srv.(EmailServiceServer).Create(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/emailService.ProductsService/Create",
+		FullMethod: "/emailService.EmailService/Create",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProductsServiceServer).Create(ctx, req.(*CreateReq))
+		return srv.(EmailServiceServer).Create(ctx, req.(*CreateReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ProductsService_GetByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _EmailService_GetByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetByIDReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ProductsServiceServer).GetByID(ctx, in)
+		return srv.(EmailServiceServer).GetByID(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/emailService.ProductsService/GetByID",
+		FullMethod: "/emailService.EmailService/GetByID",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProductsServiceServer).GetByID(ctx, req.(*GetByIDReq))
+		return srv.(EmailServiceServer).GetByID(ctx, req.(*GetByIDReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ProductsService_Search_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _EmailService_Search_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SearchReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ProductsServiceServer).Search(ctx, in)
+		return srv.(EmailServiceServer).Search(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/emailService.ProductsService/Search",
+		FullMethod: "/emailService.EmailService/Search",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProductsServiceServer).Search(ctx, req.(*SearchReq))
+		return srv.(EmailServiceServer).Search(ctx, req.(*SearchReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-var _ProductsService_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "emailService.ProductsService",
-	HandlerType: (*ProductsServiceServer)(nil),
+var _EmailService_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "emailService.EmailService",
+	HandlerType: (*EmailServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "Create",
-			Handler:    _ProductsService_Create_Handler,
+			Handler:    _EmailService_Create_Handler,
 		},
 		{
 			MethodName: "GetByID",
-			Handler:    _ProductsService_GetByID_Handler,
+			Handler:    _EmailService_GetByID_Handler,
 		},
 		{
 			MethodName: "Search",
-			Handler:    _ProductsService_Search_Handler,
+			Handler:    _EmailService_Search_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
