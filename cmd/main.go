@@ -2,9 +2,9 @@ package main
 
 import (
 	"log"
-	"net/http"
 
 	"github.com/AleksK1NG/nats-streaming/config"
+	"github.com/AleksK1NG/nats-streaming/internal/server"
 	"github.com/AleksK1NG/nats-streaming/pkg/jaeger"
 	"github.com/AleksK1NG/nats-streaming/pkg/logger"
 	"github.com/AleksK1NG/nats-streaming/pkg/nats"
@@ -42,12 +42,12 @@ func main() {
 	defer closer.Close()
 	appLogger.Info("Opentracing connected")
 
-	client, err := redis.NewRedisClient(cfg)
+	redisClient, err := redis.NewRedisClient(cfg)
 	if err != nil {
 		appLogger.Fatalf("NewRedisClient: %+v", err)
 	}
 
-	appLogger.Infof("Redis connected: %+v", client.PoolStats())
+	appLogger.Infof("Redis connected: %+v", redisClient.PoolStats())
 
 	natsConn, err := nats.NewNatsConnect(cfg)
 	if err != nil {
@@ -67,7 +67,7 @@ func main() {
 	}
 	appLogger.Infof("PostgreSQL connected: %+v", pgxPool.Stat().TotalConns())
 
-	if err := http.ListenAndServe(":5000", nil); err != nil {
-		appLogger.Fatalf("ListenAndServe: %+v", err)
-	}
+	s := server.NewServer(appLogger, cfg, natsConn, pgxPool, tracer, redisClient)
+
+	appLogger.Fatal(s.Run())
 }

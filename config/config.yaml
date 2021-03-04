@@ -1,7 +1,7 @@
 AppVersion: 1.0.0
 
-HTTPServer:
-  Port: 5000
+HTTP:
+  Port: ":5000"
   Development: true
   Timeout: 15
   ReadTimeout: 5
@@ -10,7 +10,7 @@ HTTPServer:
   MaxConnectionAge: 5
 
 GRPC:
-  Port: 7000
+  Port: ":7000"
   MaxConnectionIdle: 5
   Timeout: 15
   MaxConnectionAge: 5
