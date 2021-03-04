@@ -10,7 +10,7 @@ HTTP:
   MaxConnectionAge: 5
 
 GRPC:
-  Port: ":7000"
+  Port: ":5007"
   MaxConnectionIdle: 5
   Timeout: 15
   MaxConnectionAge: 5

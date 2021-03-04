@@ -2,13 +2,13 @@ package server
 
 import (
 	"context"
-	"crypto/tls"
 	"net"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
+	emailsV1 "github.com/AleksK1NG/nats-streaming/internal/email/delivery/http/v1"
 	"github.com/AleksK1NG/nats-streaming/internal/email/delivery/nats"
 	"google.golang.org/grpc/reflection"
 
@@ -25,7 +25,6 @@ import (
 	"github.com/opentracing/opentracing-go"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/keepalive"
 
 	"github.com/go-playground/validator/v10"
@@ -102,13 +101,13 @@ func (s *server) Run() error {
 	}
 	defer l.Close()
 
-	cert, err := tls.LoadX509KeyPair(certFile, keyFile)
-	if err != nil {
-		s.log.Fatalf("failed to load key pair: %s", err)
-	}
+	// cert, err := tls.LoadX509KeyPair(certFile, keyFile)
+	// if err != nil {
+	// 	s.log.Fatalf("failed to load key pair: %s", err)
+	// }
 
 	grpcServer := grpc.NewServer(
-		grpc.Creds(credentials.NewServerTLSFromCert(&cert)),
+		// grpc.Creds(credentials.NewServerTLSFromCert(&cert)),
 		grpc.KeepaliveParams(keepalive.ServerParameters{
 			MaxConnectionIdle: s.cfg.GRPC.MaxConnectionIdle * time.Minute,
 			Timeout:           s.cfg.GRPC.Timeout * time.Second,
@@ -128,6 +127,16 @@ func (s *server) Run() error {
 	emailGRPCService := emailGrpc.NewEmailGRPCService(emailUC, s.log, validate)
 	emailService.RegisterEmailServiceServer(grpcServer, emailGRPCService)
 	grpc_prometheus.Register(grpcServer)
+
+	go func() {
+		s.log.Infof("GRPC Server is listening on port: %s", s.cfg.GRPC.Port)
+		s.log.Fatal(grpcServer.Serve(l))
+	}()
+
+	v1 := s.echo.Group("/api/v1")
+	// v1.Use(mw.Metrics)
+	emailHandlers := emailsV1.NewEmailHandlers(v1.Group("/email"), emailUC, s.log, validate)
+	emailHandlers.MapRoutes()
 
 	if s.cfg.HTTP.Development {
 		reflection.Register(grpcServer)
