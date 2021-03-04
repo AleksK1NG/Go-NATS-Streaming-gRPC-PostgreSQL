@@ -49,7 +49,7 @@ func main() {
 
 	appLogger.Infof("Redis connected: %+v", redisClient.PoolStats())
 
-	natsConn, err := nats.NewNatsConnect(cfg)
+	natsConn, err := nats.NewNatsConnect(cfg, appLogger)
 	if err != nil {
 		appLogger.Fatalf("NewRedisClient: %+v", err)
 	}

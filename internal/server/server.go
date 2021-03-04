@@ -9,10 +9,11 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/AleksK1NG/nats-streaming/internal/email/delivery/nats"
 	"google.golang.org/grpc/reflection"
 
 	"github.com/AleksK1NG/nats-streaming/config"
-	grpc2 "github.com/AleksK1NG/nats-streaming/internal/email/delivery/grpc"
+	emailGrpc "github.com/AleksK1NG/nats-streaming/internal/email/delivery/grpc"
 	"github.com/AleksK1NG/nats-streaming/internal/email/repository"
 	"github.com/AleksK1NG/nats-streaming/internal/email/usecase"
 	"github.com/AleksK1NG/nats-streaming/pkg/logger"
@@ -26,6 +27,8 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/keepalive"
+
+	"github.com/go-playground/validator/v10"
 
 	grpcrecovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
 	grpc_ctxtags "github.com/grpc-ecosystem/go-grpc-middleware/tags"
@@ -67,10 +70,16 @@ func (s *server) Run() error {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
+	publisher := nats.NewPublisher(s.natsConn)
 	emailPgRepo := repository.NewEmailPGRepository(s.pgxPool)
-	emailUC := usecase.NewEmailUseCase(s.log, emailPgRepo)
+	emailUC := usecase.NewEmailUseCase(s.log, emailPgRepo, publisher)
 
-	// validate := validator.New()
+	validate := validator.New()
+
+	go func() {
+		emailSubscriber := nats.NewEmailSubscriber(s.natsConn, s.log, emailUC, validate)
+		emailSubscriber.Run()
+	}()
 
 	go func() {
 		s.log.Infof("Server is listening on PORT: %s", s.cfg.HTTP.Port)
@@ -116,7 +125,7 @@ func (s *server) Run() error {
 		),
 	)
 
-	emailGRPCService := grpc2.NewEmailGRPCService(emailUC, s.log)
+	emailGRPCService := emailGrpc.NewEmailGRPCService(emailUC, s.log, validate)
 	emailService.RegisterEmailServiceServer(grpcServer, emailGRPCService)
 	grpc_prometheus.Register(grpcServer)
 
