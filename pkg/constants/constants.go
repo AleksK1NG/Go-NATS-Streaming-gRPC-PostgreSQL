@@ -2,6 +2,7 @@ package constants
 
 const (
 	SERVER_PORT = "SERVER_PORT"
+	GRPC_PORT   = "GRPC_PORT"
 
 	NATS_URL       = "NATS_URL"
 	CLUSTER_ID     = "CLUSTER_ID"

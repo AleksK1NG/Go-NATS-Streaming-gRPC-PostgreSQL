@@ -12,6 +12,7 @@ services:
       - ./:/app
     environment:
       - SERVER_PORT=:5000
+      - GRPC_PORT=:7000
       - NATS_CLIENT_ID=microservice_a
       - CLUSTER_ID=microservice
     env_file:

@@ -9,6 +9,12 @@ HTTPServer:
   MaxConnectionIdle: 5
   MaxConnectionAge: 5
 
+GRPC:
+  Port: 7000
+  MaxConnectionIdle: 5
+  Timeout: 15
+  MaxConnectionAge: 5
+
 Logger:
   DisableCaller: false
   DisableStacktrace: false
