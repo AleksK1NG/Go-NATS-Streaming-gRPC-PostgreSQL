@@ -13,6 +13,7 @@ import (
 type Config struct {
 	AppVersion  string
 	HTTP        HTTP
+	GRPC        GRPC
 	Logger      Logger
 	Metrics     Metrics
 	Jaeger      Jaeger
@@ -86,6 +87,13 @@ type PostgreSQL struct {
 	PostgresqlDBName   string
 	PostgresqlSSLMode  string
 	PgDriver           string
+}
+
+type GRPC struct {
+	Port              string
+	MaxConnectionIdle time.Duration
+	Timeout           time.Duration
+	MaxConnectionAge  time.Duration
 }
 
 func exportConfig() error {
@@ -176,6 +184,11 @@ func ParseConfig() (*Config, error) {
 	jaegerHost := os.Getenv(constants.JAEGER_HOST)
 	if redisURL != "" {
 		c.Jaeger.Host = jaegerHost
+	}
+
+	gRPCPort := os.Getenv(constants.GRPC_PORT)
+	if redisURL != "" {
+		c.GRPC.Port = gRPCPort
 	}
 
 	return &c, nil
