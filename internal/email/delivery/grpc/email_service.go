@@ -6,15 +6,17 @@ import (
 	"github.com/AleksK1NG/nats-streaming/internal/email"
 	"github.com/AleksK1NG/nats-streaming/pkg/logger"
 	"github.com/AleksK1NG/nats-streaming/proto/email"
+	"github.com/go-playground/validator/v10"
 )
 
 type emailGRPCService struct {
-	emailUC email.UseCase
-	log     logger.Logger
+	emailUC   email.UseCase
+	log       logger.Logger
+	validator *validator.Validate
 }
 
-func NewEmailGRPCService(emailUC email.UseCase, log logger.Logger) *emailGRPCService {
-	return &emailGRPCService{emailUC: emailUC, log: log}
+func NewEmailGRPCService(emailUC email.UseCase, log logger.Logger, validator *validator.Validate) *emailGRPCService {
+	return &emailGRPCService{emailUC: emailUC, log: log, validator: validator}
 }
 
 func (e *emailGRPCService) Create(ctx context.Context, req *emailService.CreateReq) (*emailService.CreateRes, error) {
