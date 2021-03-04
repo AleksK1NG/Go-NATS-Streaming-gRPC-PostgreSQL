@@ -12,7 +12,7 @@ message Email {
   string From = 2;
   string To = 3;
   string Subject = 4;
-  double Message = 5;
+  string Message = 5;
   google.protobuf.Timestamp CreatedAt = 6;
 }
 
@@ -22,7 +22,7 @@ message CreateReq {
   string From = 1;
   string To = 2;
   string Subject = 3;
-  double Message = 4;
+  string Message = 4;
 }
 
 message CreateRes {

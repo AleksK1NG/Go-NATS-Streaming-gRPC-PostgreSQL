@@ -7,6 +7,7 @@ import (
 	"github.com/AleksK1NG/nats-streaming/internal/email/delivery/nats"
 	"github.com/AleksK1NG/nats-streaming/internal/models"
 	"github.com/AleksK1NG/nats-streaming/pkg/logger"
+	"github.com/AleksK1NG/nats-streaming/pkg/utils"
 	"github.com/satori/go.uuid"
 )
 
@@ -25,5 +26,13 @@ func (e *emailUseCase) Create(ctx context.Context, email *models.Email) (*models
 }
 
 func (e *emailUseCase) GetByID(ctx context.Context, emailID uuid.UUID) (*models.Email, error) {
+	panic("implement me")
+}
+
+func (e *emailUseCase) PublishCreate(ctx context.Context, email *models.Email) error {
+	panic("implement me")
+}
+
+func (e *emailUseCase) Search(ctx context.Context, search string, pagination *utils.Pagination) (*models.EmailsList, error) {
 	panic("implement me")
 }
