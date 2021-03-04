@@ -46,7 +46,6 @@ const (
 	stackSize       = 1 << 10 // 1 KB
 	csrfTokenHeader = "X-CSRF-Token"
 	bodyLimit       = "2M"
-	kafkaGroupID    = "products_group"
 )
 
 type server struct {
