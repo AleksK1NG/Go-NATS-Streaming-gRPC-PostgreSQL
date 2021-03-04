@@ -76,19 +76,19 @@ cert:
 # ==============================================================================
 # Go migrate postgresql
 
-DB_NAME = user_db
+DB_NAME = mails_db
 DB_HOST = localhost
 DB_PORT = 5432
 SSL_MODE = disable
 
-force_user_db:
+force_db:
 	migrate -database postgres://postgres:postgres@$(DB_HOST):$(DB_PORT)/$(DB_NAME)?sslmode=$(SSL_MODE) -path migrations force 1
 
-version_user_db:
+version_db:
 	migrate -database postgres://postgres:postgres@$(DB_HOST):$(DB_PORT)/$(DB_NAME)?sslmode=$(SSL_MODE) -path migrations version
 
-migrate_user_db_up:
+migrate_up:
 	migrate -database postgres://postgres:postgres@$(DB_HOST):$(DB_PORT)/$(DB_NAME)?sslmode=$(SSL_MODE) -path migrations up 1
 
-migrate_user_db_down:
+migrate_down:
 	migrate -database postgres://postgres:postgres@$(DB_HOST):$(DB_PORT)/$(DB_NAME)?sslmode=$(SSL_MODE) -path migrations down 1

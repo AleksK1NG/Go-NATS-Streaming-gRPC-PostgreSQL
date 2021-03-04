@@ -11,6 +11,8 @@ CREATE TABLE emails
     email_id    UUID PRIMARY KEY         DEFAULT uuid_generate_v4(),
     addressFrom VARCHAR(250) NOT NULL CHECK ( addressFrom <> '' ),
     addressTo   VARCHAR(250) NOT NULL CHECK ( addressTo <> '' ),
+    subject     VARCHAR(250) NOT NULL CHECK ( subject <> '' ),
+    message     TEXT         NOT NULL CHECK ( message <> '' ),
     created_at  TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
