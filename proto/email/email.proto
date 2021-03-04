@@ -52,7 +52,7 @@ message SearchRes {
   repeated Email Emails = 6;
 }
 
-service ProductsService {
+service EmailService {
   rpc Create(CreateReq) returns (CreateRes) {}
   rpc GetByID(GetByIDReq) returns (GetByIDRes) {}
   rpc Search(SearchReq) returns (SearchRes) {}
