@@ -20,10 +20,12 @@ type emailGRPCService struct {
 	validator *validator.Validate
 }
 
+// NewEmailGRPCService email gRPC service constructor
 func NewEmailGRPCService(emailUC email.UseCase, log logger.Logger, validator *validator.Validate) *emailGRPCService {
 	return &emailGRPCService{emailUC: emailUC, log: log, validator: validator}
 }
 
+// Create create email
 func (e *emailGRPCService) Create(ctx context.Context, req *emailService.CreateReq) (*emailService.CreateRes, error) {
 	span, ctx := opentracing.StartSpanFromContext(ctx, "productService.Create")
 	defer span.Finish()
@@ -53,6 +55,7 @@ func (e *emailGRPCService) Create(ctx context.Context, req *emailService.CreateR
 	return &emailService.CreateRes{Email: created.ToProto()}, nil
 }
 
+// GetByID find single email by id
 func (e *emailGRPCService) GetByID(ctx context.Context, req *emailService.GetByIDReq) (*emailService.GetByIDRes, error) {
 	span, ctx := opentracing.StartSpanFromContext(ctx, "productService.GetByID")
 	defer span.Finish()
@@ -76,6 +79,7 @@ func (e *emailGRPCService) GetByID(ctx context.Context, req *emailService.GetByI
 	return &emailService.GetByIDRes{Email: m.ToProto()}, nil
 }
 
+// Search find email by search text
 func (e *emailGRPCService) Search(ctx context.Context, req *emailService.SearchReq) (*emailService.SearchRes, error) {
 	span, ctx := opentracing.StartSpanFromContext(ctx, "productService.Search")
 	defer span.Finish()
