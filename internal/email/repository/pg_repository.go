@@ -15,10 +15,12 @@ type emailPGRepository struct {
 	db *pgxpool.Pool
 }
 
+// NewEmailPGRepository Email postgresql repository constructor
 func NewEmailPGRepository(db *pgxpool.Pool) *emailPGRepository {
 	return &emailPGRepository{db: db}
 }
 
+// Create create new email
 func (e *emailPGRepository) Create(ctx context.Context, email *models.Email) (*models.Email, error) {
 	span, ctx := opentracing.StartSpanFromContext(ctx, "emailPGRepository.Create")
 	defer span.Finish()
@@ -31,6 +33,7 @@ func (e *emailPGRepository) Create(ctx context.Context, email *models.Email) (*m
 	return &mail, nil
 }
 
+// GetByID get single email by id
 func (e *emailPGRepository) GetByID(ctx context.Context, emailID uuid.UUID) (*models.Email, error) {
 	span, ctx := opentracing.StartSpanFromContext(ctx, "emailPGRepository.GetByID")
 	defer span.Finish()
@@ -43,6 +46,7 @@ func (e *emailPGRepository) GetByID(ctx context.Context, emailID uuid.UUID) (*mo
 	return &mail, nil
 }
 
+// Search search email
 func (e *emailPGRepository) Search(ctx context.Context, search string, pagination *utils.Pagination) (*models.EmailsList, error) {
 	span, ctx := opentracing.StartSpanFromContext(ctx, "emailPGRepository.Search")
 	defer span.Finish()

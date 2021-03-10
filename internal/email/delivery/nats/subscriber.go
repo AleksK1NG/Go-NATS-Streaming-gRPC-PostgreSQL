@@ -17,10 +17,12 @@ type emailSubscriber struct {
 	validator *validator.Validate
 }
 
+// NewEmailSubscriber email subscriber constructor
 func NewEmailSubscriber(stanConn stan.Conn, log logger.Logger, emailUC email.UseCase, validator *validator.Validate) *emailSubscriber {
 	return &emailSubscriber{stanConn: stanConn, log: log, emailUC: emailUC, validator: validator}
 }
 
+// Subscribe subscribe to subject and run workers with given callback for handling messages
 func (s *emailSubscriber) Subscribe(subject, qgroup string, workersNum int, cb stan.MsgHandler) {
 	s.log.Infof("Subscribing to Subject: %v, group: %v", subject, qgroup)
 	wg := &sync.WaitGroup{}
@@ -64,6 +66,7 @@ func (s *emailSubscriber) runWorker(
 	}
 }
 
+// Run start subscribers
 func (s *emailSubscriber) Run() {
 	go s.Subscribe(createEmailSubject, emailGroupName, createEmailWorkers, s.createEmail)
 }
