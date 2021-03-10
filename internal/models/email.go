@@ -11,10 +11,10 @@ import (
 // Email model
 type Email struct {
 	EmailID   uuid.UUID `json:"emailID"`
-	From      string    `json:"from"`
-	To        string    `json:"to"`
-	Subject   string    `json:"subject"`
-	Message   string    `json:"message"`
+	From      string    `json:"from" validate:"required,min=3,max=60"`
+	To        string    `json:"to" validate:"required,min=3,max=60"`
+	Subject   string    `json:"subject" validate:"required,min=3,max=80"`
+	Message   string    `json:"message" validate:"required,min=3,max=250"`
 	CreatedAt time.Time `json:"createdAt"`
 }
 
@@ -53,6 +53,5 @@ type MailData struct {
 	To      string `json:"to"`
 	From    string `json:"from"`
 	Subject string `json:"subject"`
-	// Content string `json:"content"`
 	Content string `json:"content"`
 }
