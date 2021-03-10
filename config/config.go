@@ -133,15 +133,15 @@ func ParseConfig() (*Config, error) {
 	}
 
 	natsUrl := os.Getenv(constants.NATS_URL)
-	if httpPort != "" {
+	if natsUrl != "" {
 		c.Nats.URL = natsUrl
 	}
 	natsClientID := os.Getenv(constants.NATS_CLIENT_ID)
-	if httpPort != "" {
+	if natsClientID != "" {
 		c.Nats.ClusterID = natsClientID
 	}
 	natsClusterID := os.Getenv(constants.CLUSTER_ID)
-	if httpPort != "" {
+	if natsClusterID != "" {
 		c.Nats.ClusterID = natsClusterID
 	}
 
@@ -150,52 +150,69 @@ func ParseConfig() (*Config, error) {
 		c.Redis.RedisAddr = redisURL
 	}
 	redisPassword := os.Getenv(constants.REDIS_PASSWORD)
-	if redisURL != "" {
+	if redisPassword != "" {
 		c.Redis.RedisPassword = redisPassword
 	}
 
 	mailServiceURL := os.Getenv(constants.MAIL_SERVICE)
-	if redisURL != "" {
+	if mailServiceURL != "" {
 		c.MailService.URL = mailServiceURL
 	}
 
 	postgresPORT := os.Getenv(constants.POSTGRES_HOST)
-	if redisURL != "" {
+	if postgresPORT != "" {
 		c.PostgreSQL.PostgresqlHost = postgresPORT
 	}
 	postgresHost := os.Getenv(constants.POSTGRES_HOST)
-	if redisURL != "" {
+	if postgresHost != "" {
 		c.PostgreSQL.PostgresqlHost = postgresHost
 	}
 	postgresqlPort := os.Getenv(constants.POSTGRES_PORT)
-	if redisURL != "" {
+	if postgresqlPort != "" {
 		c.PostgreSQL.PostgresqlPort = postgresqlPort
 	}
 	postgresUser := os.Getenv(constants.POSTGRES_USER)
-	if redisURL != "" {
+	if postgresUser != "" {
 		c.PostgreSQL.PostgresqlUser = postgresUser
 	}
 	postgresPassword := os.Getenv(constants.POSTGRES_PASSWORD)
-	if redisURL != "" {
+	if postgresPassword != "" {
 		c.PostgreSQL.PostgresqlPassword = postgresPassword
 	}
 	postgresDB := os.Getenv(constants.POSTGRES_DB)
-	if redisURL != "" {
+	if postgresDB != "" {
 		c.PostgreSQL.PostgresqlDBName = postgresDB
 	}
 	postgresSSL := os.Getenv(constants.POSTGRES_SSL)
-	if redisURL != "" {
+	if postgresSSL != "" {
 		c.PostgreSQL.PostgresqlSSLMode = postgresSSL
 	}
 
 	jaegerHost := os.Getenv(constants.JAEGER_HOST)
-	if redisURL != "" {
+	if jaegerHost != "" {
 		c.Jaeger.Host = jaegerHost
 	}
 
 	gRPCPort := os.Getenv(constants.GRPC_PORT)
-	if redisURL != "" {
+	if gRPCPort != "" {
 		c.GRPC.Port = gRPCPort
+	}
+
+	mailHost := os.Getenv(constants.MAIL_HOST)
+	if mailHost != "" {
+		c.MailService.Host = mailHost
+	}
+	mailPort := os.Getenv(constants.MAIL_PORT)
+	if mailPort != "" {
+		c.MailService.Port = viper.GetInt(mailPort)
+	}
+	mailUsername := os.Getenv(constants.MAIL_USERNAME)
+	if mailUsername != "" {
+		c.MailService.Username = mailUsername
+	}
+	mailPassword := os.Getenv(constants.MAIL_PASSWORD)
+	if mailUsername != "" {
+		c.MailService.Password = mailPassword
 	}
 
 	return &c, nil
