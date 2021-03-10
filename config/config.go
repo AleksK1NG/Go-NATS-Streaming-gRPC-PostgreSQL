@@ -74,8 +74,15 @@ type Nats struct {
 }
 
 type MailService struct {
-	URL  string
-	From string
+	URL            string
+	From           string
+	Host           string
+	Port           int
+	Username       string
+	Password       string
+	KeepAlive      bool
+	ConnectTimeout time.Duration
+	SendTimeout    time.Duration
 }
 
 // Postgresql config

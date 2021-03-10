@@ -1,8 +1,10 @@
 package nats
 
 const (
-	createEmailWorkers = 1
+	createEmailWorkers = 6
+	sendEmailWorkers   = 6
 
-	createEmailSubject = "create:email"
+	createEmailSubject = "mail:create"
+	sendEmailSubject   = "mail:send"
 	emailGroupName     = "email_service"
 )

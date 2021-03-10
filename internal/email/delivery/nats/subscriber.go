@@ -1,10 +1,13 @@
 package nats
 
 import (
+	"context"
+	"encoding/json"
 	"sync"
 	"time"
 
 	"github.com/AleksK1NG/nats-streaming/internal/email"
+	"github.com/AleksK1NG/nats-streaming/internal/models"
 	"github.com/AleksK1NG/nats-streaming/pkg/logger"
 	"github.com/go-playground/validator/v10"
 	"github.com/nats-io/stan.go"
@@ -69,10 +72,46 @@ func (s *emailSubscriber) runWorker(
 // Run start subscribers
 func (s *emailSubscriber) Run() {
 	go s.Subscribe(createEmailSubject, emailGroupName, createEmailWorkers, s.createEmail)
+	go s.Subscribe(sendEmailSubject, emailGroupName, sendEmailWorkers, s.sendEmail)
 }
 
 func (s *emailSubscriber) createEmail(msg *stan.Msg) {
-	s.log.Infof("create:email message: %+v", msg)
+	ctx, cancelFunc := context.WithTimeout(context.Background(), 15*time.Second)
+	defer cancelFunc()
+	s.log.Infof("createEmail: %+v", msg)
+
+	var m models.Email
+	if err := json.Unmarshal(msg.Data, &m); err != nil {
+		s.log.Errorf("json.Unmarshal : %v", err)
+		return
+	}
+
+	if err := s.emailUC.Create(ctx, &m); err != nil {
+		s.log.Errorf("emailUC.Create : %v", err)
+		return
+	}
+
+	if err := msg.Ack(); err != nil {
+		s.log.Errorf("msg.Ack: %+v", err)
+	}
+}
+
+func (s *emailSubscriber) sendEmail(msg *stan.Msg) {
+	ctx, cancelFunc := context.WithTimeout(context.Background(), 15*time.Second)
+	defer cancelFunc()
+	s.log.Infof("sendEmail: %+v", msg)
+
+	var m models.Email
+	if err := json.Unmarshal(msg.Data, &m); err != nil {
+		s.log.Errorf("json.Unmarshal : %v", err)
+		return
+	}
+
+	if err := s.emailUC.SendEmail(ctx, &m); err != nil {
+		s.log.Errorf("emailUC.SendEmail : %v", err)
+		return
+	}
+
 	if err := msg.Ack(); err != nil {
 		s.log.Errorf("msg.Ack: %+v", err)
 	}
