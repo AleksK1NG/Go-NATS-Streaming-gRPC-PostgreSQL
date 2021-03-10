@@ -5,9 +5,11 @@ import (
 	"strings"
 	"time"
 
+	"github.com/AleksK1NG/nats-streaming/docs"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
 func (s *server) runHttpServer() {
@@ -30,12 +32,13 @@ func (s *server) runHttpServer() {
 }
 
 func (s *server) mapRoutes() {
-	// docs.SwaggerInfo.Version = "1.0"
-	// docs.SwaggerInfo.Title = "Products microservice"
-	// docs.SwaggerInfo.Description = "Products REST API microservice."
-	// docs.SwaggerInfo.Version = "1.0"
-	// docs.SwaggerInfo.BasePath = "/api/v1"
-	// s.echo.GET("/swagger/*", echoSwagger.WrapHandler)
+	docs.SwaggerInfo.Version = "1.0"
+	docs.SwaggerInfo.Title = "Products microservice"
+	docs.SwaggerInfo.Description = "Products REST API microservice."
+	docs.SwaggerInfo.Version = "1.0"
+	docs.SwaggerInfo.BasePath = "/api/v1"
+
+	s.echo.GET("/swagger/*", echoSwagger.WrapHandler)
 	s.echo.Use(middleware.Logger())
 	s.echo.Pre(middleware.HTTPSRedirect())
 	s.echo.Use(middleware.CORSWithConfig(middleware.CORSConfig{

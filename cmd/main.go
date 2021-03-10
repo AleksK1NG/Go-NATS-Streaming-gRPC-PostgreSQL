@@ -13,6 +13,20 @@ import (
 	"github.com/opentracing/opentracing-go"
 )
 
+// @title Email microservice
+// @version 1.0
+// @description Email microservice
+// @termsOfService http://swagger.io/terms/
+
+// @contact.name Alexander Bryksin
+// @contact.url https://github.com/AleksK1NG
+// @contact.email alexander.bryksin@yandex.ru
+
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host localhost:5000
+// @BasePath /api/v1
 func main() {
 	log.Println("Starting microservice")
 

@@ -26,6 +26,14 @@ func NewEmailHandlers(group *echo.Group, emailUC email.UseCase, log logger.Logge
 	return &emailHandlers{group: group, emailUC: emailUC, log: log, validate: validate}
 }
 
+// Create Create
+// @Tags Emails
+// @Summary Create new email
+// @Description Create new email and send it
+// @Accept json
+// @Produce json
+// @Success 201 {object} models.Email
+// @Router /email [post]
 func (h *emailHandlers) Create() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		span, ctx := opentracing.StartSpanFromContext(c.Request().Context(), "emailHandlers.Create")
@@ -56,6 +64,15 @@ func (h *emailHandlers) Create() echo.HandlerFunc {
 	}
 }
 
+// GetByID GetByID
+// @Tags Emails
+// @Summary Get email by id
+// @Description Get email by email uuid
+// @Accept json
+// @Produce json
+// @Param email_id path string true "email_id"
+// @Success 200 {object} models.Email
+// @Router /email/{email_id} [get]
 func (h *emailHandlers) GetByID() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		span, ctx := opentracing.StartSpanFromContext(c.Request().Context(), "emailHandlers.GetByID")
@@ -81,6 +98,17 @@ func (h *emailHandlers) GetByID() echo.HandlerFunc {
 	}
 }
 
+// Search Search emails
+// @Tags Emails
+// @Summary Search emails
+// @Description Search email
+// @Accept json
+// @Produce json
+// @Param search query string false "search text"
+// @Param page query string false "page number"
+// @Param size query string false "number of elements"
+// @Success 200 {object} models.EmailsList
+// @Router /email/search [get]
 func (h *emailHandlers) Search() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		span, ctx := opentracing.StartSpanFromContext(c.Request().Context(), "emailHandlers.Search")

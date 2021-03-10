@@ -1,0 +1,106 @@
+definitions:
+  models.Email:
+    properties:
+      createdAt:
+        type: string
+      emailID:
+        type: string
+      from:
+        type: string
+      message:
+        type: string
+      subject:
+        type: string
+      to:
+        type: string
+    required:
+    - from
+    - message
+    - subject
+    - to
+    type: object
+  models.EmailsList:
+    properties:
+      emails:
+        items:
+          $ref: '#/definitions/models.Email'
+        type: array
+      hasMore:
+        type: boolean
+      page:
+        type: integer
+      size:
+        type: integer
+      totalCount:
+        type: integer
+      totalPages:
+        type: integer
+    type: object
+info:
+  contact: {}
+paths:
+  /email:
+    post:
+      consumes:
+      - application/json
+      description: Create new email and send it
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Email'
+      summary: Create new email
+      tags:
+      - Emails
+  /email/{email_id}:
+    get:
+      consumes:
+      - application/json
+      description: Get email by email uuid
+      parameters:
+      - description: email_id
+        in: path
+        name: email_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Email'
+      summary: Get email by id
+      tags:
+      - Emails
+  /email/search:
+    get:
+      consumes:
+      - application/json
+      description: Search email
+      parameters:
+      - description: search text
+        in: query
+        name: search
+        type: string
+      - description: page number
+        in: query
+        name: page
+        type: string
+      - description: number of elements
+        in: query
+        name: size
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.EmailsList'
+      summary: Search emails
+      tags:
+      - Emails
+swagger: "2.0"
