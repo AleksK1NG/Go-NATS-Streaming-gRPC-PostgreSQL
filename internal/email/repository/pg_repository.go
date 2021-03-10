@@ -26,7 +26,14 @@ func (e *emailPGRepository) Create(ctx context.Context, email *models.Email) (*m
 	defer span.Finish()
 
 	var mail models.Email
-	if err := e.db.QueryRow(ctx, createEmailQuery, &email.From, &email.To, &email.Subject, &email.Message).Scan(&mail); err != nil {
+	if err := e.db.QueryRow(
+		ctx,
+		createEmailQuery,
+		&email.From,
+		&email.To,
+		&email.Subject,
+		&email.Message,
+	).Scan(&mail.EmailID, &mail.From, &mail.To, &mail.Subject, &mail.Message, &mail.CreatedAt); err != nil {
 		return nil, errors.Wrap(err, "Scan")
 	}
 

@@ -44,15 +44,14 @@ func (e *emailGRPCService) Create(ctx context.Context, req *emailService.CreateR
 		return nil, grpcErrors.ErrorResponse(err, err.Error())
 	}
 
-	created, err := e.emailUC.Create(ctx, m)
-	if err != nil {
+	if err := e.emailUC.Create(ctx, m); err != nil {
 		errorRequests.Inc()
-		e.log.Errorf("validator.StructCtx: %v", err)
+		e.log.Errorf("emailUC.Create: %v", err)
 		return nil, grpcErrors.ErrorResponse(err, err.Error())
 	}
 
 	successRequests.Inc()
-	return &emailService.CreateRes{Email: created.ToProto()}, nil
+	return &emailService.CreateRes{Status: "Ok"}, nil
 }
 
 // GetByID find single email by id

@@ -48,6 +48,13 @@ Redis:
 MailService:
   URL: "localhost:1025"
   From: "alexander.bryksin@yandex.ru"
+  Host: "localhost"
+  Port: 1025
+  Username: ""
+  Password: ""
+  KeepAlive: false
+  ConnectTimeout: 10
+  SendTimeout: 10
 
 PostgreSQL:
   PostgresqlHost: localhost

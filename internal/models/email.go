@@ -47,3 +47,12 @@ func (l *EmailsList) ToProto() []*emailService.Email {
 	}
 	return mails
 }
+
+// MailData for send email
+type MailData struct {
+	To      string `json:"to"`
+	From    string `json:"from"`
+	Subject string `json:"subject"`
+	// Content string `json:"content"`
+	Content string `json:"content"`
+}

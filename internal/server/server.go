@@ -10,6 +10,7 @@ import (
 
 	emailsV1 "github.com/AleksK1NG/nats-streaming/internal/email/delivery/http/v1"
 	"github.com/AleksK1NG/nats-streaming/internal/email/delivery/nats"
+	"github.com/AleksK1NG/nats-streaming/pkg/email"
 	"google.golang.org/grpc/reflection"
 
 	"github.com/AleksK1NG/nats-streaming/config"
@@ -59,7 +60,14 @@ type server struct {
 }
 
 // NewServer constructor
-func NewServer(log logger.Logger, cfg *config.Config, natsConn stan.Conn, pgxPool *pgxpool.Pool, tracer opentracing.Tracer, redis *redis.Client) *server {
+func NewServer(
+	log logger.Logger,
+	cfg *config.Config,
+	natsConn stan.Conn,
+	pgxPool *pgxpool.Pool,
+	tracer opentracing.Tracer,
+	redis *redis.Client,
+) *server {
 	return &server{log: log, cfg: cfg, natsConn: natsConn, pgxPool: pgxPool, tracer: tracer, redis: redis, echo: echo.New()}
 }
 
@@ -68,9 +76,10 @@ func (s *server) Run() error {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
+	smtpClient := email.NewSmtpClient(s.cfg)
 	publisher := nats.NewPublisher(s.natsConn)
 	emailPgRepo := repository.NewEmailPGRepository(s.pgxPool)
-	emailUC := usecase.NewEmailUseCase(s.log, emailPgRepo, publisher)
+	emailUC := usecase.NewEmailUseCase(s.log, emailPgRepo, publisher, smtpClient)
 
 	validate := validator.New()
 
