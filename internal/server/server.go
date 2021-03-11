@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"crypto/tls"
 	"net"
 	"os"
 	"os/signal"
@@ -10,7 +11,9 @@ import (
 
 	emailsV1 "github.com/AleksK1NG/nats-streaming/internal/email/delivery/http/v1"
 	"github.com/AleksK1NG/nats-streaming/internal/email/delivery/nats"
+	"github.com/AleksK1NG/nats-streaming/internal/interceptors"
 	"github.com/AleksK1NG/nats-streaming/pkg/email"
+	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/reflection"
 
 	"github.com/AleksK1NG/nats-streaming/config"
@@ -81,6 +84,8 @@ func (s *server) Run() error {
 	emailPgRepo := repository.NewEmailPGRepository(s.pgxPool)
 	emailUC := usecase.NewEmailUseCase(s.log, emailPgRepo, publisher, smtpClient)
 
+	im := interceptors.NewInterceptorManager(s.log, s.cfg)
+
 	validate := validator.New()
 
 	go func() {
@@ -109,13 +114,13 @@ func (s *server) Run() error {
 	}
 	defer l.Close()
 
-	// cert, err := tls.LoadX509KeyPair(certFile, keyFile)
-	// if err != nil {
-	// 	s.log.Fatalf("failed to load key pair: %s", err)
-	// }
+	cert, err := tls.LoadX509KeyPair(certFile, keyFile)
+	if err != nil {
+		s.log.Fatalf("failed to load key pair: %s", err)
+	}
 
 	grpcServer := grpc.NewServer(
-		// grpc.Creds(credentials.NewServerTLSFromCert(&cert)),
+		grpc.Creds(credentials.NewServerTLSFromCert(&cert)),
 		grpc.KeepaliveParams(keepalive.ServerParameters{
 			MaxConnectionIdle: s.cfg.GRPC.MaxConnectionIdle * time.Minute,
 			Timeout:           s.cfg.GRPC.Timeout * time.Second,
@@ -127,7 +132,7 @@ func (s *server) Run() error {
 			grpc_opentracing.UnaryServerInterceptor(),
 			grpc_prometheus.UnaryServerInterceptor,
 			grpcrecovery.UnaryServerInterceptor(),
-			// im.Logger,
+			im.Logger,
 		),
 		),
 	)
