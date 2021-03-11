@@ -79,14 +79,17 @@ func (s *emailSubscriber) createEmail(msg *stan.Msg) {
 	ctx, cancelFunc := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancelFunc()
 	s.log.Infof("createEmail: %+v", msg)
+	totalSubscribeMessages.Inc()
 
 	var m models.Email
 	if err := json.Unmarshal(msg.Data, &m); err != nil {
+		errorSubscribeMessages.Inc()
 		s.log.Errorf("json.Unmarshal : %v", err)
 		return
 	}
 
 	if err := s.emailUC.Create(ctx, &m); err != nil {
+		errorSubscribeMessages.Inc()
 		s.log.Errorf("emailUC.Create : %v", err)
 		return
 	}
@@ -94,20 +97,24 @@ func (s *emailSubscriber) createEmail(msg *stan.Msg) {
 	if err := msg.Ack(); err != nil {
 		s.log.Errorf("msg.Ack: %+v", err)
 	}
+	successSubscribeMessages.Inc()
 }
 
 func (s *emailSubscriber) sendEmail(msg *stan.Msg) {
 	ctx, cancelFunc := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancelFunc()
 	s.log.Infof("sendEmail: %+v", msg)
+	totalSubscribeMessages.Inc()
 
 	var m models.Email
 	if err := json.Unmarshal(msg.Data, &m); err != nil {
+		errorSubscribeMessages.Inc()
 		s.log.Errorf("json.Unmarshal : %v", err)
 		return
 	}
 
 	if err := s.emailUC.SendEmail(ctx, &m); err != nil {
+		errorSubscribeMessages.Inc()
 		s.log.Errorf("emailUC.SendEmail : %v", err)
 		return
 	}
@@ -115,4 +122,5 @@ func (s *emailSubscriber) sendEmail(msg *stan.Msg) {
 	if err := msg.Ack(); err != nil {
 		s.log.Errorf("msg.Ack: %+v", err)
 	}
+	successSubscribeMessages.Inc()
 }

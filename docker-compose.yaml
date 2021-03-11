@@ -8,11 +8,12 @@ services:
       dockerfile: Dockerfile
     ports:
       - 5000:5000
+      - 5007:5007
     volumes:
       - ./:/app
     environment:
       - SERVER_PORT=:5000
-      - GRPC_PORT=:7000
+      - GRPC_PORT=:5007
       - NATS_CLIENT_ID=microservice_a
       - CLUSTER_ID=microservice
     env_file:
@@ -20,6 +21,12 @@ services:
     restart: always
     depends_on:
       - nats-streaming
+      - mails_postgesql
+      - mailhog
+      - redis
+      - prometheus
+      - grafana
+      - jaeger
     networks:
       - nats
 

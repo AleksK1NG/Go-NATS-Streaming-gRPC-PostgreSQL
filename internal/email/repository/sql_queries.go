@@ -11,9 +11,6 @@ const (
 	FROM emails
 	WHERE document_with_idx @@ to_tsquery($1)`
 
-	// searchQuery = `SELECT email_id, addressfrom, addressto, subject, message, created_at
-	// FROM emails WHERE addressto ILIKE '%' || $1 || '%' ORDER BY created_at OFFSET $2 LIMIT  $3`
-
 	searchQuery = `SELECT email_id, addressto, addressfrom, subject, message, created_at
 	FROM emails
 	WHERE document_with_idx @@ to_tsquery($1) ORDER BY created_at OFFSET $2 LIMIT $3`

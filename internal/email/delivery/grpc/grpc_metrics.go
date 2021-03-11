@@ -18,10 +18,6 @@ var (
 		Name: "grpc_email_create_incoming_requests_total",
 		Help: "The total number of incoming create email GRPC requests",
 	})
-	updateRequests = promauto.NewCounter(prometheus.CounterOpts{
-		Name: "grpc_email_update_incoming_requests_total",
-		Help: "The total number of incoming update email GRPC requests",
-	})
 	getByIdRequests = promauto.NewCounter(prometheus.CounterOpts{
 		Name: "grpc_email_get_by_id_incoming_requests_total",
 		Help: "The total number of incoming get by id email GRPC requests",
