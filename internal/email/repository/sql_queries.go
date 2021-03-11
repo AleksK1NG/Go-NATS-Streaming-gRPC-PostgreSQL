@@ -7,9 +7,14 @@ const (
 
 	getByIDQuery = `SELECT email_id, addressfrom, addressto, subject, message, created_at FROM emails WHERE email_id = $1`
 
-	searchTotalCountQuery = `SELECT count(email_id) FROM emails WHERE addressto ILIKE '%' || $1 || '%' 
-	ORDER BY created_at OFFSET $2 LIMIT  $3`
+	searchTotalCountQuery = `SELECT count(email_id)
+	FROM emails
+	WHERE document_with_idx @@ to_tsquery($1)`
 
-	searchQuery = `SELECT email_id, addressfrom, addressto, subject, message, created_at 
-	FROM emails WHERE addressto ILIKE '%' || $1 || '%' ORDER BY created_at OFFSET $2 LIMIT  $3`
+	// searchQuery = `SELECT email_id, addressfrom, addressto, subject, message, created_at
+	// FROM emails WHERE addressto ILIKE '%' || $1 || '%' ORDER BY created_at OFFSET $2 LIMIT  $3`
+
+	searchQuery = `SELECT email_id, addressto, addressfrom, subject, message, created_at
+	FROM emails
+	WHERE document_with_idx @@ to_tsquery($1) ORDER BY created_at OFFSET $2 LIMIT $3`
 )

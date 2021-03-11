@@ -130,7 +130,7 @@ func (h *emailHandlers) Search() echo.HandlerFunc {
 
 		pq := utils.NewPaginationQuery(size, page)
 
-		res, err := h.emailUC.Search(ctx, c.Param("search"), pq)
+		res, err := h.emailUC.Search(ctx, c.QueryParam("search"), pq)
 		if err != nil {
 			h.log.Errorf("strconv.Atoi: %v", err)
 			errorRequests.Inc()

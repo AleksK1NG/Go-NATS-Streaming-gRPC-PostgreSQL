@@ -2,6 +2,8 @@ package repository
 
 import (
 	"context"
+	"fmt"
+	"log"
 
 	"github.com/AleksK1NG/nats-streaming/internal/models"
 	"github.com/AleksK1NG/nats-streaming/pkg/utils"
@@ -46,7 +48,9 @@ func (e *emailPGRepository) GetByID(ctx context.Context, emailID uuid.UUID) (*mo
 	defer span.Finish()
 
 	var mail models.Email
-	if err := e.db.QueryRow(ctx, getByIDQuery, emailID).Scan(&mail); err != nil {
+	if err := e.db.QueryRow(ctx, getByIDQuery, emailID).Scan(
+		&mail.EmailID, &mail.From, &mail.To, &mail.Subject, &mail.Message, &mail.CreatedAt,
+	); err != nil {
 		return nil, errors.Wrap(err, "Scan")
 	}
 
@@ -58,8 +62,10 @@ func (e *emailPGRepository) Search(ctx context.Context, search string, paginatio
 	span, ctx := opentracing.StartSpanFromContext(ctx, "emailPGRepository.Search")
 	defer span.Finish()
 
+	searchWord := fmt.Sprintf("%s:*", search)
+	log.Printf("SEARCH: %s", searchWord)
 	var count int
-	if err := e.db.QueryRow(ctx, searchTotalCountQuery, search, pagination.GetOffset(), pagination.GetLimit()).Scan(&count); err != nil {
+	if err := e.db.QueryRow(ctx, searchTotalCountQuery, searchWord).Scan(&count); err != nil {
 		return nil, errors.Wrap(err, "QueryRow")
 	}
 	if count == 0 {
@@ -73,7 +79,7 @@ func (e *emailPGRepository) Search(ctx context.Context, search string, paginatio
 		}, nil
 	}
 
-	rows, err := e.db.Query(ctx, searchQuery, searchQuery, pagination.GetOffset(), pagination.GetLimit())
+	rows, err := e.db.Query(ctx, searchQuery, searchWord, pagination.GetOffset(), pagination.GetLimit())
 	if err != nil {
 		return nil, errors.Wrap(err, "db.Query")
 	}
@@ -82,7 +88,7 @@ func (e *emailPGRepository) Search(ctx context.Context, search string, paginatio
 	emailList := make([]*models.Email, 0, count)
 	for rows.Next() {
 		var m models.Email
-		if err := rows.Scan(&m.EmailID, &m.From, &m.EmailID, &m.To, &m.Subject, &m.Message, &m.CreatedAt); err != nil {
+		if err := rows.Scan(&m.EmailID, &m.To, &m.From, &m.Subject, &m.Message, &m.CreatedAt); err != nil {
 			return nil, errors.Wrap(err, " rows.Scan")
 		}
 		emailList = append(emailList, &m)
