@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"sync"
-	"time"
 
 	"github.com/AleksK1NG/nats-streaming/internal/email"
 	"github.com/AleksK1NG/nats-streaming/internal/models"
@@ -40,9 +39,9 @@ func (s *emailSubscriber) Subscribe(subject, qgroup string, workersNum int, cb s
 			qgroup,
 			cb,
 			stan.SetManualAckMode(),
-			stan.AckWait(60*time.Second),
-			stan.DurableName("microservice-dur"),
-			stan.MaxInflight(25),
+			stan.AckWait(ackWait),
+			stan.DurableName(durableName),
+			stan.MaxInflight(maxInflight),
 		)
 	}
 	wg.Wait()
@@ -76,7 +75,7 @@ func (s *emailSubscriber) Run() {
 }
 
 func (s *emailSubscriber) createEmail(msg *stan.Msg) {
-	ctx, cancelFunc := context.WithTimeout(context.Background(), 15*time.Second)
+	ctx, cancelFunc := context.WithTimeout(context.Background(), workerTimeout)
 	defer cancelFunc()
 	s.log.Infof("createEmail: %+v", msg)
 	totalSubscribeMessages.Inc()
@@ -101,7 +100,7 @@ func (s *emailSubscriber) createEmail(msg *stan.Msg) {
 }
 
 func (s *emailSubscriber) sendEmail(msg *stan.Msg) {
-	ctx, cancelFunc := context.WithTimeout(context.Background(), 15*time.Second)
+	ctx, cancelFunc := context.WithTimeout(context.Background(), workerTimeout)
 	defer cancelFunc()
 	s.log.Infof("sendEmail: %+v", msg)
 	totalSubscribeMessages.Inc()

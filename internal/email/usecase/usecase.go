@@ -59,7 +59,7 @@ func (e *emailUseCase) GetByID(ctx context.Context, emailID uuid.UUID) (*models.
 
 // PublishCreate publish create email event to message broker
 func (e *emailUseCase) PublishCreate(ctx context.Context, email *models.Email) error {
-	span, ctx := opentracing.StartSpanFromContext(ctx, "emailUseCase.PublishCreate")
+	span, _ := opentracing.StartSpanFromContext(ctx, "emailUseCase.PublishCreate")
 	defer span.Finish()
 
 	mailBytes, err := json.Marshal(email)
@@ -79,7 +79,7 @@ func (e *emailUseCase) Search(ctx context.Context, search string, pagination *ut
 
 // SendEmail send email
 func (e *emailUseCase) SendEmail(ctx context.Context, email *models.Email) error {
-	span, ctx := opentracing.StartSpanFromContext(ctx, "emailUseCase.SendEmail")
+	span, _ := opentracing.StartSpanFromContext(ctx, "emailUseCase.SendEmail")
 	defer span.Finish()
 
 	return e.smtpClient.SendMail(&models.MailData{

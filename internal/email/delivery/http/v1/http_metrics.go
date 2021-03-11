@@ -18,10 +18,6 @@ var (
 		Name: "http_email_create_incoming_requests_total",
 		Help: "The total number of incoming create email HTTP requests",
 	})
-	updateRequests = promauto.NewCounter(prometheus.CounterOpts{
-		Name: "http_email_update_incoming_requests_total",
-		Help: "The total number of incoming update email HTTP requests",
-	})
 	getByIdRequests = promauto.NewCounter(prometheus.CounterOpts{
 		Name: "http_email_get_by_id_incoming_requests_total",
 		Help: "The total number of incoming get by id email HTTP requests",
