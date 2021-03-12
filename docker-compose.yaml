@@ -9,6 +9,7 @@ services:
     ports:
       - 5000:5000
       - 5007:5007
+      - 7070:7070
     volumes:
       - ./:/app
     environment:
@@ -16,6 +17,7 @@ services:
       - GRPC_PORT=:5007
       - NATS_CLIENT_ID=microservice_a
       - CLUSTER_ID=microservice
+      - METRICS_PORT=7070
     env_file:
       - .env
     restart: always
@@ -55,6 +57,9 @@ services:
     ports:
       - 8080:8080
       - 443:443
+    volumes:
+      - ./nginx/nginx-selfsigned.crt:/etc/nginx/certs/nginx-selfsigned.crt
+      - ./nginx/nginx-selfsigned.key:/etc/nginx/certs/nginx-selfsigned.key
     build:
       context: ./nginx
       dockerfile: Dockerfile

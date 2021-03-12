@@ -132,6 +132,11 @@ func ParseConfig() (*Config, error) {
 		c.HTTP.Port = httpPort
 	}
 
+	metricsPort := os.Getenv(constants.METRICS_PORT)
+	if metricsPort != "" {
+		c.Metrics.Port = metricsPort
+	}
+
 	natsUrl := os.Getenv(constants.NATS_URL)
 	if natsUrl != "" {
 		c.Nats.URL = natsUrl

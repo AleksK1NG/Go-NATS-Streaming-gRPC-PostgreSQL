@@ -9,3 +9,5 @@ ssl/server.crt
 ssl/server.csr
 ssl/server.key
 ssl/server.pem
+nginx/nginx-selfsigned.crt
+nginx/nginx-selfsigned.key

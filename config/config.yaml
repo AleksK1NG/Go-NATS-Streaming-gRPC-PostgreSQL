@@ -27,8 +27,8 @@ Nats:
   ClientID: microservice_a
 
 Metrics:
-  Port: ":7071"
-  Url: "host.docker.internal:7071"
+  Port: ":7070"
+  Url: "host.docker.internal:7070"
   ServiceName: nats_microservice
 
 Jaeger:
