@@ -28,7 +28,7 @@ import (
 // @host localhost:5000
 // @BasePath /api/v1
 func main() {
-	log.Println("Starting microservice")
+	log.Println("Starting microservice =D")
 
 	cfg, err := config.ParseConfig()
 	if err != nil {

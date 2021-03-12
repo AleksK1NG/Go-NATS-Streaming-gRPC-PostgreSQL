@@ -107,6 +107,10 @@ func (s *server) Run() error {
 			cancel()
 		}
 	}()
+	v1 := s.echo.Group("/api/v1")
+	// v1.Use(mw.Metrics)
+	emailHandlers := emailsV1.NewEmailHandlers(v1.Group("/email"), emailUC, s.log, validate)
+	emailHandlers.MapRoutes()
 
 	l, err := net.Listen("tcp", s.cfg.GRPC.Port)
 	if err != nil {
@@ -141,15 +145,8 @@ func (s *server) Run() error {
 	emailService.RegisterEmailServiceServer(grpcServer, emailGRPCService)
 	grpc_prometheus.Register(grpcServer)
 
-	go func() {
-		s.log.Infof("GRPC Server is listening on port: %s", s.cfg.GRPC.Port)
-		s.log.Fatal(grpcServer.Serve(l))
-	}()
-
-	v1 := s.echo.Group("/api/v1")
-	// v1.Use(mw.Metrics)
-	emailHandlers := emailsV1.NewEmailHandlers(v1.Group("/email"), emailUC, s.log, validate)
-	emailHandlers.MapRoutes()
+	s.log.Infof("GRPC Server is listening on port: %s", s.cfg.GRPC.Port)
+	s.log.Fatal(grpcServer.Serve(l))
 
 	if s.cfg.HTTP.Development {
 		reflection.Register(grpcServer)
