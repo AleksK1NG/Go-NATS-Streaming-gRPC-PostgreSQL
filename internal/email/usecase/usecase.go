@@ -82,10 +82,14 @@ func (e *emailUseCase) SendEmail(ctx context.Context, email *models.Email) error
 	span, _ := opentracing.StartSpanFromContext(ctx, "emailUseCase.SendEmail")
 	defer span.Finish()
 
-	return e.smtpClient.SendMail(&models.MailData{
+	if err := e.smtpClient.SendMail(&models.MailData{
 		To:      email.To,
 		From:    email.From,
 		Subject: email.Subject,
 		Content: email.Message,
-	})
+	}); err != nil {
+		return errors.Wrap(err, "SendMail")
+	}
+
+	return nil
 }

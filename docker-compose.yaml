@@ -181,3 +181,4 @@ services:
 networks:
   nats:
     name: nats
+    driver: bridge
