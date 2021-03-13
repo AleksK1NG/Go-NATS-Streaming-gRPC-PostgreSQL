@@ -12,6 +12,7 @@ import (
 	emailsV1 "github.com/AleksK1NG/nats-streaming/internal/email/delivery/http/v1"
 	"github.com/AleksK1NG/nats-streaming/internal/email/delivery/nats"
 	"github.com/AleksK1NG/nats-streaming/internal/interceptors"
+	"github.com/AleksK1NG/nats-streaming/internal/middlewares"
 	"github.com/AleksK1NG/nats-streaming/pkg/email"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/reflection"
@@ -85,6 +86,7 @@ func (s *server) Run() error {
 	emailUC := usecase.NewEmailUseCase(s.log, emailPgRepo, publisher, smtpClient)
 
 	im := interceptors.NewInterceptorManager(s.log, s.cfg)
+	mw := middlewares.NewMiddlewareManager(s.log, s.cfg)
 
 	validate := validator.New()
 
@@ -108,7 +110,8 @@ func (s *server) Run() error {
 		}
 	}()
 	v1 := s.echo.Group("/api/v1")
-	// v1.Use(mw.Metrics)
+	v1.Use(mw.Metrics)
+
 	emailHandlers := emailsV1.NewEmailHandlers(v1.Group("/email"), emailUC, s.log, validate)
 	emailHandlers.MapRoutes()
 
