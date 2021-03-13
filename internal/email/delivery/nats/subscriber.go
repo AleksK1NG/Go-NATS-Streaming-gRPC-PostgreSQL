@@ -4,13 +4,20 @@ import (
 	"context"
 	"encoding/json"
 	"sync"
+	"time"
 
 	"github.com/AleksK1NG/nats-streaming/internal/email"
 	"github.com/AleksK1NG/nats-streaming/internal/models"
 	"github.com/AleksK1NG/nats-streaming/pkg/logger"
+	"github.com/avast/retry-go"
 	"github.com/go-playground/validator/v10"
 	"github.com/nats-io/stan.go"
 	"github.com/opentracing/opentracing-go"
+)
+
+const (
+	retryAttempts = 3
+	retryDelay    = 1 * time.Second
 )
 
 type emailSubscriber struct {
@@ -92,7 +99,13 @@ func (s *emailSubscriber) createEmail(msg *stan.Msg) {
 		return
 	}
 
-	if err := s.emailUC.Create(ctx, &m); err != nil {
+	if err := retry.Do(func() error {
+		return s.emailUC.Create(ctx, &m)
+	},
+		retry.Attempts(retryAttempts),
+		retry.Delay(retryDelay),
+		retry.Context(ctx),
+	); err != nil {
 		errorSubscribeMessages.Inc()
 		s.log.Errorf("emailUC.Create : %v", err)
 		return
@@ -121,7 +134,13 @@ func (s *emailSubscriber) sendEmail(msg *stan.Msg) {
 		return
 	}
 
-	if err := s.emailUC.SendEmail(ctx, &m); err != nil {
+	if err := retry.Do(func() error {
+		return s.emailUC.SendEmail(ctx, &m)
+	},
+		retry.Attempts(retryAttempts),
+		retry.Delay(retryDelay),
+		retry.Context(ctx),
+	); err != nil {
 		errorSubscribeMessages.Inc()
 		s.log.Errorf("emailUC.SendEmail : %v", err)
 		return
