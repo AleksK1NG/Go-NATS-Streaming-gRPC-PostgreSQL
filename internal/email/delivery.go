@@ -1,4 +1,4 @@
-package delivery
+package email
 
 import "github.com/labstack/echo/v4"
 
