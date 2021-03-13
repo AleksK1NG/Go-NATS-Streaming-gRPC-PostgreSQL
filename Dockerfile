@@ -1,4 +1,4 @@
-FROM golang:1.16.0-alpine
+FROM golang:1.16.2-alpine
 
 WORKDIR /app
 
@@ -9,6 +9,6 @@ COPY . /app
 RUN go get github.com/githubnemo/CompileDaemon
 RUN go mod download
 
-EXPOSE 5000
+#EXPOSE 5000
 
 ENTRYPOINT CompileDaemon --build="go build -o main cmd/main.go" --command=./main
