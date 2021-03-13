@@ -26,8 +26,8 @@ func (s *smtpClient) getConn() (*mail.SMTPClient, error) {
 	server := mail.NewSMTPClient()
 
 	// SMTP Server
-	server.Host = "host.docker.internal"
-	server.Port = 1025
+	server.Host = s.cfg.MailService.Host
+	server.Port = s.cfg.MailService.Port
 	server.Username = s.cfg.MailService.Username
 	server.Password = s.cfg.MailService.Password
 	server.ConnectTimeout = s.cfg.MailService.ConnectTimeout * time.Second

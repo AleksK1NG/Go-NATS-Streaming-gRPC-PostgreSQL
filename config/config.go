@@ -3,6 +3,7 @@ package config
 import (
 	"log"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/AleksK1NG/nats-streaming/pkg/constants"
@@ -209,7 +210,11 @@ func ParseConfig() (*Config, error) {
 	}
 	mailPort := os.Getenv(constants.MAIL_PORT)
 	if mailPort != "" {
-		c.MailService.Port = viper.GetInt(mailPort)
+		mailPortEnv, err := strconv.Atoi(mailPort)
+		if err != nil {
+			return nil, err
+		}
+		c.MailService.Port = mailPortEnv
 	}
 	mailUsername := os.Getenv(constants.MAIL_USERNAME)
 	if mailUsername != "" {
