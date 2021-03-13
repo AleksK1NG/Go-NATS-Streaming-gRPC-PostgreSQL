@@ -17,7 +17,7 @@ services:
       - GRPC_PORT=:5007
       - NATS_CLIENT_ID=microservice_a
       - CLUSTER_ID=microservice
-      - METRICS_PORT=7070
+      - METRICS_PORT=:7070
     env_file:
       - .env
     restart: always
