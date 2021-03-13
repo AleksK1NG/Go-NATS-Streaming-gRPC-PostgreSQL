@@ -1,6 +1,7 @@
 package email
 
 import (
+	"crypto/tls"
 	"time"
 
 	"github.com/AleksK1NG/nats-streaming/config"
@@ -25,14 +26,16 @@ func (s *smtpClient) getConn() (*mail.SMTPClient, error) {
 	server := mail.NewSMTPClient()
 
 	// SMTP Server
-	server.Host = s.cfg.MailService.Host
-	server.Port = s.cfg.MailService.Port
+	server.Host = "host.docker.internal"
+	server.Port = 1025
 	server.Username = s.cfg.MailService.Username
 	server.Password = s.cfg.MailService.Password
-	server.Encryption = mail.EncryptionNone
 	server.ConnectTimeout = s.cfg.MailService.ConnectTimeout * time.Second
 	server.SendTimeout = s.cfg.MailService.SendTimeout * time.Second
-	server.KeepAlive = s.cfg.MailService.KeepAlive
+	server.KeepAlive = false
+	server.Encryption = mail.EncryptionTLS
+	server.TLSConfig = &tls.Config{InsecureSkipVerify: true}
+	server.Authentication = mail.AuthPlain
 
 	return server.Connect()
 }
