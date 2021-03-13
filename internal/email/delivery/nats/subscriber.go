@@ -10,6 +10,7 @@ import (
 	"github.com/AleksK1NG/nats-streaming/pkg/logger"
 	"github.com/go-playground/validator/v10"
 	"github.com/nats-io/stan.go"
+	"github.com/opentracing/opentracing-go"
 )
 
 type emailSubscriber struct {
@@ -77,6 +78,10 @@ func (s *emailSubscriber) Run() {
 func (s *emailSubscriber) createEmail(msg *stan.Msg) {
 	ctx, cancelFunc := context.WithTimeout(context.Background(), workerTimeout)
 	defer cancelFunc()
+
+	span, ctx := opentracing.StartSpanFromContext(ctx, "emailSubscriber.createEmail")
+	defer span.Finish()
+
 	s.log.Infof("createEmail: %+v", msg)
 	totalSubscribeMessages.Inc()
 
@@ -102,6 +107,10 @@ func (s *emailSubscriber) createEmail(msg *stan.Msg) {
 func (s *emailSubscriber) sendEmail(msg *stan.Msg) {
 	ctx, cancelFunc := context.WithTimeout(context.Background(), workerTimeout)
 	defer cancelFunc()
+
+	span, ctx := opentracing.StartSpanFromContext(ctx, "emailSubscriber.sendEmail")
+	defer span.Finish()
+
 	s.log.Infof("sendEmail: %+v", msg)
 	totalSubscribeMessages.Inc()
 
