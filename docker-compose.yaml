@@ -5,7 +5,7 @@ services:
     container_name: microservice_a
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     ports:
       - 5000:5000
       - 5007:5007
@@ -36,7 +36,7 @@ services:
     container_name: microservice_b
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     ports:
       - 5001:5001
       - 5010:5010

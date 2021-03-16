@@ -1,5 +1,7 @@
 .idea
 .gitignore
+Dockerfile.dev
 Dockerfile
 docker-compose.yml
+docker-compose.local.yml
 Makefile
