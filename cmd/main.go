@@ -63,7 +63,7 @@ func main() {
 
 	natsConn, err := nats.NewNatsConnect(cfg, appLogger)
 	if err != nil {
-		appLogger.Fatalf("NewRedisClient: %+v", err)
+		appLogger.Fatalf("NewNatsConnect: %+v", err)
 	}
 	appLogger.Infof(
 		"Nats Connected: Status: %+v IsConnected: %v ConnectedUrl: %v ConnectedServerId: %v",

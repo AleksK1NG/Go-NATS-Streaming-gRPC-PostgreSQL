@@ -148,7 +148,7 @@ func ParseConfig() (*Config, error) {
 	}
 	natsClientID := os.Getenv(constants.NATS_CLIENT_ID)
 	if natsClientID != "" {
-		c.Nats.ClusterID = natsClientID
+		c.Nats.ClientID = natsClientID
 	}
 	natsClusterID := os.Getenv(constants.CLUSTER_ID)
 	if natsClusterID != "" {
