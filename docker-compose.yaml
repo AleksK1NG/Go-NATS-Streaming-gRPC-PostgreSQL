@@ -32,25 +32,37 @@ services:
     networks:
       - nats
 
-  #  microservice_b:
-  #    container_name: microservice_b
-  #    build:
-  #      context: .
-  #      dockerfile: Dockerfile
-  #    ports:
-  #      - 5555:5555
-  #    volumes:
-  #      - ./:/app
-  #    environment:
-  #      - SERVER_PORT=:5555
-  #      - NATS_CLIENT_ID=microservice_b
-  #    env_file:
-  #      - .env
-  #    restart: always
-  #    depends_on:
-  #      - nats-streaming
-  #    networks:
-  #      - nats
+  microservice_b:
+    container_name: microservice_b
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 5001:5001
+      - 5010:5010
+      - 7080:7080
+    volumes:
+      - ./:/app
+    environment:
+      - SERVER_PORT=:5001
+      - GRPC_PORT=:5010
+      - NATS_CLIENT_ID=microservice_b
+      - CLUSTER_ID=microservice
+      - METRICS_PORT=:7080
+    env_file:
+      - .env
+    restart: always
+    depends_on:
+      - nats-streaming
+      - mails_postgesql
+      - mailhog
+      - redis
+      - prometheus
+      - grafana
+      - jaeger
+    networks:
+      - nats
+
 
   nginx:
     container_name: nginx_microservice
