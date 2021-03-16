@@ -1,14 +1,41 @@
-FROM golang:1.16.2-alpine
+FROM golang:1.16-alpine AS builder
 
-WORKDIR /app
+# Set necessary environmet variables needed for our image
+ENV CGO_ENABLED=0 \
+    GOOS=linux \
+    GOARCH=amd64
 
-ENV CONFIG=docker
+# Move to working directory /build
+WORKDIR /build
 
-COPY . /app
-
-RUN go get github.com/githubnemo/CompileDaemon
+# Copy and download dependency using go mod
+COPY go.mod .
+COPY go.sum .
 RUN go mod download
 
-#EXPOSE 5000
+# Copy the code into the container
+COPY . .
 
-ENTRYPOINT CompileDaemon --build="go build -o main cmd/main.go" --command=./main
+# Build the application
+# go build -o [name] [path to file]
+RUN go build -o app cmd/main.go
+
+# Move to /dist directory as the place for resulting binary folder
+WORKDIR /dist
+
+# Copy binary from build to main folder
+RUN cp /build/app .
+
+############################
+# STEP 2 build a small image
+############################
+FROM alpine:latest
+RUN apk --no-cache add ca-certificates
+
+COPY . .
+COPY --from=builder /dist/app /
+#COPY ./database/data.json /database/data.json
+# Copy the code into the container
+
+# Command to run the executable
+ENTRYPOINT ["/app"]
