@@ -77,7 +77,7 @@ func (e *emailUseCase) Search(ctx context.Context, search string, pagination *ut
 	return e.emailPGRepo.Search(ctx, search, pagination)
 }
 
-// SendEmail send email
+// SendEmail send email using smtp client
 func (e *emailUseCase) SendEmail(ctx context.Context, email *models.Email) error {
 	span, _ := opentracing.StartSpanFromContext(ctx, "emailUseCase.SendEmail")
 	defer span.Finish()

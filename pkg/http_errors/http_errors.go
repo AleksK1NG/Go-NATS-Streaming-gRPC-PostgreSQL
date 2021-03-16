@@ -49,7 +49,7 @@ var (
 	InvalidUUID           = errors.New("invalid uuid")
 )
 
-// Rest error interface
+// RestErr interface
 type RestErr interface {
 	Status() int
 	Error() string
@@ -57,34 +57,33 @@ type RestErr interface {
 	ErrBody() RestError
 }
 
-// Rest error struct
+// RestError response struct
 type RestError struct {
 	ErrStatus int         `json:"status,omitempty"`
 	ErrError  string      `json:"error,omitempty"`
 	ErrCauses interface{} `json:"err_causes,omitempty"`
 }
 
-// Error body
+// ErrBody Error body
 func (e RestError) ErrBody() RestError {
 	return e
 }
 
-// Error  Error() interface method
 func (e RestError) Error() string {
 	return fmt.Sprintf("status: %d - errors: %s - causes: %v", e.ErrStatus, e.ErrError, e.ErrCauses)
 }
 
-// Error status
+// Status Error status
 func (e RestError) Status() int {
 	return e.ErrStatus
 }
 
-// RestError Causes
+// Causes RestError Causes
 func (e RestError) Causes() interface{} {
 	return e.ErrCauses
 }
 
-// New Rest Error
+// NewRestError New Rest Error
 func NewRestError(status int, err string, causes interface{}) RestErr {
 	return RestError{
 		ErrStatus: status,
@@ -93,7 +92,7 @@ func NewRestError(status int, err string, causes interface{}) RestErr {
 	}
 }
 
-// New Rest Error With Message
+// NewRestErrorWithMessage New Rest Error With Message
 func NewRestErrorWithMessage(status int, err string, causes interface{}) RestErr {
 	return RestError{
 		ErrStatus: status,
@@ -102,7 +101,7 @@ func NewRestErrorWithMessage(status int, err string, causes interface{}) RestErr
 	}
 }
 
-// New Rest Error From Bytes
+// NewRestErrorFromBytes New Rest Error From Bytes
 func NewRestErrorFromBytes(bytes []byte) (RestErr, error) {
 	var apiErr RestError
 	if err := json.Unmarshal(bytes, &apiErr); err != nil {
@@ -111,7 +110,7 @@ func NewRestErrorFromBytes(bytes []byte) (RestErr, error) {
 	return apiErr, nil
 }
 
-// New Bad Request Error
+// NewBadRequestError New Bad Request Error
 func NewBadRequestError(causes interface{}) RestErr {
 	return RestError{
 		ErrStatus: http.StatusBadRequest,
@@ -120,7 +119,7 @@ func NewBadRequestError(causes interface{}) RestErr {
 	}
 }
 
-// New Not Found Error
+// NewNotFoundError New Not Found Error
 func NewNotFoundError(causes interface{}) RestErr {
 	return RestError{
 		ErrStatus: http.StatusNotFound,
@@ -129,7 +128,7 @@ func NewNotFoundError(causes interface{}) RestErr {
 	}
 }
 
-// New Unauthorized Error
+// NewUnauthorizedError New Unauthorized Error
 func NewUnauthorizedError(causes interface{}) RestErr {
 	return RestError{
 		ErrStatus: http.StatusUnauthorized,
@@ -138,7 +137,7 @@ func NewUnauthorizedError(causes interface{}) RestErr {
 	}
 }
 
-// New Forbidden Error
+// NewForbiddenError New Forbidden Error
 func NewForbiddenError(causes interface{}) RestErr {
 	return RestError{
 		ErrStatus: http.StatusForbidden,
@@ -147,7 +146,7 @@ func NewForbiddenError(causes interface{}) RestErr {
 	}
 }
 
-// New Internal Server Error
+// NewInternalServerError New Internal Server Error
 func NewInternalServerError(causes interface{}) RestErr {
 	result := RestError{
 		ErrStatus: http.StatusInternalServerError,
@@ -157,7 +156,7 @@ func NewInternalServerError(causes interface{}) RestErr {
 	return result
 }
 
-// Parser of error string messages returns RestError
+// ParseErrors parse error string messages and returns RestError
 func ParseErrors(err error) RestErr {
 	switch {
 	case errors.Is(err, sql.ErrNoRows):
@@ -206,12 +205,7 @@ func parseValidatorError(err error) RestErr {
 	return NewRestError(http.StatusBadRequest, ErrInvalidField, err)
 }
 
-// Error response
-func ErrorResponse(err error) (int, interface{}) {
-	return ParseErrors(err).Status(), ParseErrors(err)
-}
-
-// Error response object and status code
+// ErrorCtxResponse response with error status and code
 func ErrorCtxResponse(ctx echo.Context, err error) error {
 	restErr := ParseErrors(err)
 	return ctx.JSON(restErr.Status(), restErr.ErrBody())

@@ -17,6 +17,7 @@ type Pagination struct {
 	OrderBy string `json:"orderBy,omitempty"`
 }
 
+// NewPaginationQuery Pagination query constructor
 func NewPaginationQuery(size int, page int) *Pagination {
 	return &Pagination{Size: size, Page: page}
 }

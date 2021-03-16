@@ -19,8 +19,6 @@ func (s *server) runHttpServer() {
 	s.echo.GET("/metrics", echo.WrapHandler(promhttp.Handler()))
 	s.mapRoutes()
 
-	s.log.Infof("CFG: +v", s.cfg)
-
 	go func() {
 		s.echo.Server.ReadTimeout = time.Second * s.cfg.HTTP.ReadTimeout
 		s.echo.Server.WriteTimeout = time.Second * s.cfg.HTTP.WriteTimeout
@@ -33,8 +31,8 @@ func (s *server) runHttpServer() {
 
 func (s *server) mapRoutes() {
 	docs.SwaggerInfo.Version = "1.0"
-	docs.SwaggerInfo.Title = "Products microservice"
-	docs.SwaggerInfo.Description = "Products REST API microservice."
+	docs.SwaggerInfo.Title = "Emails microservice"
+	docs.SwaggerInfo.Description = "Emails NATS gRPC microservice."
 	docs.SwaggerInfo.Version = "1.0"
 	docs.SwaggerInfo.BasePath = "/api/v1"
 

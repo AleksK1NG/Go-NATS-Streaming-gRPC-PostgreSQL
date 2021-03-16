@@ -14,8 +14,8 @@ import (
 
 var (
 	totalRequests = promauto.NewCounter(prometheus.CounterOpts{
-		Name: "products_service_requests_total",
-		Help: "The total number of incoming gRPC messages",
+		Name: "emails_service_requests_total",
+		Help: "The total number of incoming gRPC requests",
 	})
 )
 

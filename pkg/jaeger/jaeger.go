@@ -12,7 +12,7 @@ import (
 	"github.com/uber/jaeger-lib/metrics"
 )
 
-// Init Jaeger
+// InitJaeger Init Jaeger client
 func InitJaeger(cfg *config.Config) (opentracing.Tracer, io.Closer, error) {
 	jaegerCfgInstance := jaegercfg.Configuration{
 		ServiceName: cfg.Jaeger.ServiceName,
