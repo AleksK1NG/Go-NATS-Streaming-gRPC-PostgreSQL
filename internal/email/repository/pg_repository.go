@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 	"fmt"
-	"log"
 
 	"github.com/AleksK1NG/nats-streaming/internal/models"
 	"github.com/AleksK1NG/nats-streaming/pkg/utils"
@@ -57,13 +56,12 @@ func (e *emailPGRepository) GetByID(ctx context.Context, emailID uuid.UUID) (*mo
 	return &mail, nil
 }
 
-// Search search email
+// Search search email using postgresql full text search
 func (e *emailPGRepository) Search(ctx context.Context, search string, pagination *utils.Pagination) (*models.EmailsList, error) {
 	span, ctx := opentracing.StartSpanFromContext(ctx, "emailPGRepository.Search")
 	defer span.Finish()
 
 	searchWord := fmt.Sprintf("%s:*", search)
-	log.Printf("SEARCH: %s", searchWord)
 	var count int
 	if err := e.db.QueryRow(ctx, searchTotalCountQuery, searchWord).Scan(&count); err != nil {
 		return nil, errors.Wrap(err, "QueryRow")

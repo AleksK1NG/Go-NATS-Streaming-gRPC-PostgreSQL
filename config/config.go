@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-// Config
+// Config microservice config
 type Config struct {
 	AppVersion  string
 	HTTP        HTTP
@@ -24,7 +24,7 @@ type Config struct {
 	PostgreSQL  PostgreSQL
 }
 
-// HTTP
+// HTTP server config
 type HTTP struct {
 	Port              string
 	Development       bool
@@ -35,7 +35,7 @@ type HTTP struct {
 	MaxConnectionAge  time.Duration
 }
 
-// Logger
+// Logger config
 type Logger struct {
 	DisableCaller     bool
 	DisableStacktrace bool
@@ -57,6 +57,7 @@ type Jaeger struct {
 	LogSpans    bool
 }
 
+// Redis config
 type Redis struct {
 	RedisAddr      string
 	RedisPassword  string
@@ -68,12 +69,14 @@ type Redis struct {
 	DB             int
 }
 
+// Nats config
 type Nats struct {
 	URL       string
 	ClusterID string
 	ClientID  string
 }
 
+// MailService config
 type MailService struct {
 	URL            string
 	From           string
@@ -86,7 +89,7 @@ type MailService struct {
 	SendTimeout    time.Duration
 }
 
-// Postgresql config
+// PostgreSQL config
 type PostgreSQL struct {
 	PostgresqlHost     string
 	PostgresqlPort     string
@@ -97,6 +100,7 @@ type PostgreSQL struct {
 	PgDriver           string
 }
 
+// GRPC gRPC service config
 type GRPC struct {
 	Port              string
 	MaxConnectionIdle time.Duration

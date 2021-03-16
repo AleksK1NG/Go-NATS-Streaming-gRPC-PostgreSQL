@@ -22,6 +22,7 @@ type emailHandlers struct {
 	validate *validator.Validate
 }
 
+// NewEmailHandlers emailHandlers constructor
 func NewEmailHandlers(group *echo.Group, emailUC email.UseCase, log logger.Logger, validate *validator.Validate) *emailHandlers {
 	return &emailHandlers{group: group, emailUC: emailUC, log: log, validate: validate}
 }
@@ -55,7 +56,7 @@ func (h *emailHandlers) Create() echo.HandlerFunc {
 
 		if err := h.emailUC.PublishCreate(ctx, &mail); err != nil {
 			errorRequests.Inc()
-			h.log.Errorf("validate.StructCtx: %v", err)
+			h.log.Errorf("emailUC.PublishCreate: %v", err)
 			return httpErrors.ErrorCtxResponse(c, err)
 		}
 
@@ -89,7 +90,7 @@ func (h *emailHandlers) GetByID() echo.HandlerFunc {
 		m, err := h.emailUC.GetByID(ctx, emailUUID)
 		if err != nil {
 			errorRequests.Inc()
-			h.log.Errorf("uuid.FromString: %v", err)
+			h.log.Errorf("emailUC.GetByID: %v", err)
 			return httpErrors.ErrorCtxResponse(c, err)
 		}
 
@@ -132,7 +133,7 @@ func (h *emailHandlers) Search() echo.HandlerFunc {
 
 		res, err := h.emailUC.Search(ctx, c.QueryParam("search"), pq)
 		if err != nil {
-			h.log.Errorf("strconv.Atoi: %v", err)
+			h.log.Errorf("emailUC.Search: %v", err)
 			errorRequests.Inc()
 			return httpErrors.ErrorCtxResponse(c, httpErrors.BadRequest)
 		}

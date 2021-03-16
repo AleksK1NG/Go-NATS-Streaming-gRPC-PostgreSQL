@@ -28,8 +28,6 @@ import (
 // @host localhost:5000
 // @BasePath /api/v1
 func main() {
-	log.Println("Starting microservice =D")
-
 	cfg, err := config.ParseConfig()
 	if err != nil {
 		log.Fatal(err)
@@ -37,14 +35,14 @@ func main() {
 
 	appLogger := logger.NewApiLogger(cfg)
 	appLogger.InitLogger()
-	appLogger.Info("Starting user server")
+	appLogger.Info("Starting emails microservice")
 	appLogger.Infof(
 		"AppVersion: %s, LogLevel: %s, DevelopmentMode: %s",
 		cfg.AppVersion,
 		cfg.Logger.Level,
 		cfg.HTTP.Development,
 	)
-	appLogger.Infof("Success parsed config: %+v", cfg.AppVersion)
+	appLogger.Infof("Success loaded config: %+v", cfg.AppVersion)
 
 	tracer, closer, err := jaeger.InitJaeger(cfg)
 	if err != nil {

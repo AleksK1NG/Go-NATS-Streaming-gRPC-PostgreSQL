@@ -40,6 +40,7 @@ func (e *Email) ToProto() *emailService.Email {
 	}
 }
 
+// ToProto convert mails list to proto
 func (l *EmailsList) ToProto() []*emailService.Email {
 	mails := make([]*emailService.Email, 0, len(l.Emails))
 	for _, e := range l.Emails {

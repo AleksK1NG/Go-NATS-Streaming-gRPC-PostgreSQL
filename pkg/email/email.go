@@ -40,6 +40,7 @@ func (s *smtpClient) getConn() (*mail.SMTPClient, error) {
 	return server.Connect()
 }
 
+// SendMail send simple email with text message
 func (s *smtpClient) SendMail(mailData *models.MailData) error {
 	conn, err := s.getConn()
 	if err != nil {
