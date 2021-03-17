@@ -10,6 +10,7 @@ import (
 	smtpClient "github.com/AleksK1NG/nats-streaming/pkg/email"
 	"github.com/AleksK1NG/nats-streaming/pkg/logger"
 	"github.com/AleksK1NG/nats-streaming/pkg/utils"
+	"github.com/go-redis/redis/v8"
 	"github.com/opentracing/opentracing-go"
 	"github.com/pkg/errors"
 	"github.com/satori/go.uuid"
@@ -25,11 +26,12 @@ type emailUseCase struct {
 	emailPGRepo email.PGRepository
 	publisher   nats.Publisher
 	smtpClient  smtpClient.SMTPClient
+	redisRepo   email.RedisRepository
 }
 
 // NewEmailUseCase email usecase constructor
-func NewEmailUseCase(log logger.Logger, emailPGRepo email.PGRepository, publisher nats.Publisher, smtpClient smtpClient.SMTPClient) *emailUseCase {
-	return &emailUseCase{log: log, emailPGRepo: emailPGRepo, publisher: publisher, smtpClient: smtpClient}
+func NewEmailUseCase(log logger.Logger, emailPGRepo email.PGRepository, publisher nats.Publisher, smtpClient smtpClient.SMTPClient, redisRepo email.RedisRepository) *emailUseCase {
+	return &emailUseCase{log: log, emailPGRepo: emailPGRepo, publisher: publisher, smtpClient: smtpClient, redisRepo: redisRepo}
 }
 
 // Create create new email saves in db
@@ -54,7 +56,25 @@ func (e *emailUseCase) Create(ctx context.Context, email *models.Email) error {
 func (e *emailUseCase) GetByID(ctx context.Context, emailID uuid.UUID) (*models.Email, error) {
 	span, ctx := opentracing.StartSpanFromContext(ctx, "emailUseCase.GetByID")
 	defer span.Finish()
-	return e.emailPGRepo.GetByID(ctx, emailID)
+
+	cached, err := e.redisRepo.GetEmailByID(ctx, emailID)
+	if err != nil && err != redis.Nil {
+		e.log.Errorf("redisRepo.GetEmailByID: %v", err)
+	}
+	if cached != nil {
+		return cached, nil
+	}
+
+	mail, err := e.emailPGRepo.GetByID(ctx, emailID)
+	if err != nil {
+		return nil, errors.Wrap(err, "emailPGRepo.GetByID")
+	}
+
+	if err := e.redisRepo.SetEmail(ctx, mail); err != nil {
+		e.log.Errorf("redisRepo.SetEmail: %v", err)
+	}
+
+	return mail, nil
 }
 
 // PublishCreate publish create email event to message broker

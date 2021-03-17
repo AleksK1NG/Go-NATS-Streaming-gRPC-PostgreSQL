@@ -83,7 +83,8 @@ func (s *server) Run() error {
 	smtpClient := email.NewSmtpClient(s.cfg)
 	publisher := nats.NewPublisher(s.natsConn)
 	emailPgRepo := repository.NewEmailPGRepository(s.pgxPool)
-	emailUC := usecase.NewEmailUseCase(s.log, emailPgRepo, publisher, smtpClient)
+	emailRedisRepo := repository.NewEmailRedisRepository(s.redis)
+	emailUC := usecase.NewEmailUseCase(s.log, emailPgRepo, publisher, smtpClient, emailRedisRepo)
 
 	im := interceptors.NewInterceptorManager(s.log, s.cfg)
 	mw := middlewares.NewMiddlewareManager(s.log, s.cfg)

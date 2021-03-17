@@ -14,5 +14,8 @@ const (
 	sendEmailSubject   = "mail:send"
 	emailGroupName     = "email_service"
 
+	deadLetterQueueSubject = "mail:errors"
+	maxRedeliveryCount     = 3
+
 	workerTimeout = 15 * time.Second
 )
