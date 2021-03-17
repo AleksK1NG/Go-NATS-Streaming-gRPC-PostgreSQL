@@ -13,6 +13,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/nats-io/stan.go"
 	"github.com/opentracing/opentracing-go"
+	"github.com/pkg/errors"
 )
 
 const (
@@ -50,6 +51,7 @@ func (s *emailSubscriber) Subscribe(subject, qgroup string, workersNum int, cb s
 			stan.AckWait(ackWait),
 			stan.DurableName(durableName),
 			stan.MaxInflight(maxInflight),
+			stan.DeliverAllAvailable(),
 		)
 	}
 	wg.Wait()
@@ -108,6 +110,17 @@ func (s *emailSubscriber) createEmail(msg *stan.Msg) {
 	); err != nil {
 		errorSubscribeMessages.Inc()
 		s.log.Errorf("emailUC.Create : %v", err)
+
+		if msg.Redelivered && msg.RedeliveryCount > maxRedeliveryCount {
+			if err := s.publishErrorMessage(ctx, msg, err); err != nil {
+				s.log.Errorf("publishErrorMessage : %v", err)
+				return
+			}
+			if err := msg.Ack(); err != nil {
+				s.log.Errorf("msg.Ack: %+v", err)
+				return
+			}
+		}
 		return
 	}
 
@@ -143,6 +156,17 @@ func (s *emailSubscriber) sendEmail(msg *stan.Msg) {
 	); err != nil {
 		errorSubscribeMessages.Inc()
 		s.log.Errorf("emailUC.SendEmail : %v", err)
+
+		if msg.Redelivered && msg.RedeliveryCount > maxRedeliveryCount {
+			if err := s.publishErrorMessage(ctx, msg, err); err != nil {
+				s.log.Errorf("publishErrorMessage : %v", err)
+				return
+			}
+			if err := msg.Ack(); err != nil {
+				s.log.Errorf("msg.Ack: %+v", err)
+				return
+			}
+		}
 		return
 	}
 
@@ -150,4 +174,27 @@ func (s *emailSubscriber) sendEmail(msg *stan.Msg) {
 		s.log.Errorf("msg.Ack: %+v", err)
 	}
 	successSubscribeMessages.Inc()
+}
+
+func (s *emailSubscriber) publishErrorMessage(ctx context.Context, msg *stan.Msg, err error) error {
+	span, ctx := opentracing.StartSpanFromContext(ctx, "emailSubscriber.publishErrorMessage")
+	defer span.Finish()
+
+	s.log.Infof("publish dead letter queue message: %+v", msg)
+
+	errMsg := &models.EmailErrorMsg{
+		Subject:   msg.Subject,
+		Sequence:  msg.Sequence,
+		Data:      msg.Data,
+		Timestamp: msg.Timestamp,
+		Error:     err.Error(),
+		Time:      time.Now().UTC(),
+	}
+
+	errMsgBytes, err := json.Marshal(&errMsg)
+	if err != nil {
+		return errors.Wrap(err, "json.Marshal")
+	}
+
+	return s.stanConn.Publish(deadLetterQueueSubject, errMsgBytes)
 }

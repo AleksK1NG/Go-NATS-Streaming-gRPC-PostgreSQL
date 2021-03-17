@@ -56,3 +56,13 @@ type MailData struct {
 	Subject string `json:"subject"`
 	Content string `json:"content"`
 }
+
+// EmailErrorMsg error message dto dead letter queue
+type EmailErrorMsg struct {
+	Subject   string    `json:"subject"`
+	Sequence  uint64    `json:"sequence"`
+	Data      []byte    `json:"data"`
+	Timestamp int64     `json:"topic"`
+	Error     string    `json:"error"`
+	Time      time.Time `json:"time"`
+}
