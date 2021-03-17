@@ -66,14 +66,14 @@ func (s *emailSubscriber) runWorker(
 	cb stan.MsgHandler,
 	opts ...stan.SubscriptionOption,
 ) {
+	s.log.Infof("Subscribing worker: %v, subject: %v, qgroup: %v", workerID, subject, qgroup)
 	defer wg.Done()
 
-	s.log.Infof("Subscribing worker: %v, subject: %v, qgroup: %v", workerID, subject, qgroup)
 	_, err := conn.QueueSubscribe(subject, qgroup, cb, opts...)
 	if err != nil {
-		s.log.Errorf("Worker: %v, QueueSubscribe: %v", workerID, err)
+		s.log.Errorf("WorkerID: %v, QueueSubscribe: %v", workerID, err)
 		if err := conn.Close(); err != nil {
-			s.log.Errorf("Worker: %v, conn.Close: %v", workerID, err)
+			s.log.Errorf("WorkerID: %v, conn.Close error: %v", workerID, err)
 		}
 	}
 }
@@ -91,7 +91,7 @@ func (s *emailSubscriber) createEmail(msg *stan.Msg) {
 	span, ctx := opentracing.StartSpanFromContext(ctx, "emailSubscriber.createEmail")
 	defer span.Finish()
 
-	s.log.Infof("createEmail: %+v", msg)
+	s.log.Infof("subscriber createEmail message: %#v", msg)
 	totalSubscribeMessages.Inc()
 
 	var m models.Email
@@ -117,7 +117,7 @@ func (s *emailSubscriber) createEmail(msg *stan.Msg) {
 				return
 			}
 			if err := msg.Ack(); err != nil {
-				s.log.Errorf("msg.Ack: %+v", err)
+				s.log.Errorf("msg.Ack: %v", err)
 				return
 			}
 		}
@@ -125,7 +125,7 @@ func (s *emailSubscriber) createEmail(msg *stan.Msg) {
 	}
 
 	if err := msg.Ack(); err != nil {
-		s.log.Errorf("msg.Ack: %+v", err)
+		s.log.Errorf("msg.Ack: %v", err)
 	}
 	successSubscribeMessages.Inc()
 }
@@ -137,7 +137,7 @@ func (s *emailSubscriber) sendEmail(msg *stan.Msg) {
 	span, ctx := opentracing.StartSpanFromContext(ctx, "emailSubscriber.sendEmail")
 	defer span.Finish()
 
-	s.log.Infof("sendEmail: %+v", msg)
+	s.log.Infof("subscriber sendEmail message: %#v", msg)
 	totalSubscribeMessages.Inc()
 
 	var m models.Email
@@ -163,7 +163,7 @@ func (s *emailSubscriber) sendEmail(msg *stan.Msg) {
 				return
 			}
 			if err := msg.Ack(); err != nil {
-				s.log.Errorf("msg.Ack: %+v", err)
+				s.log.Errorf("msg.Ack: %v", err)
 				return
 			}
 		}
@@ -171,7 +171,7 @@ func (s *emailSubscriber) sendEmail(msg *stan.Msg) {
 	}
 
 	if err := msg.Ack(); err != nil {
-		s.log.Errorf("msg.Ack: %+v", err)
+		s.log.Errorf("msg.Ack: %v", err)
 	}
 	successSubscribeMessages.Inc()
 }
@@ -180,7 +180,7 @@ func (s *emailSubscriber) publishErrorMessage(ctx context.Context, msg *stan.Msg
 	span, ctx := opentracing.StartSpanFromContext(ctx, "emailSubscriber.publishErrorMessage")
 	defer span.Finish()
 
-	s.log.Infof("publish dead letter queue message: %+v", msg)
+	s.log.Infof("publish dead letter queue message: %v", msg)
 
 	errMsg := &models.EmailErrorMsg{
 		Subject:   msg.Subject,

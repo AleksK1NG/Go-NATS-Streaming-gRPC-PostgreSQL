@@ -4,6 +4,7 @@ import (
 	"github.com/nats-io/stan.go"
 )
 
+// Publisher nats publisher interface
 type Publisher interface {
 	Publish(subject string, data []byte) error
 	PublishAsync(subject string, data []byte, ah stan.AckHandler) (string, error)
