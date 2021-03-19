@@ -79,101 +79,99 @@ func (s *emailSubscriber) runWorker(
 }
 
 // Run start subscribers
-func (s *emailSubscriber) Run() {
-	go s.Subscribe(createEmailSubject, emailGroupName, createEmailWorkers, s.createEmail)
-	go s.Subscribe(sendEmailSubject, emailGroupName, sendEmailWorkers, s.sendEmail)
+func (s *emailSubscriber) Run(ctx context.Context) {
+	go s.Subscribe(createEmailSubject, emailGroupName, createEmailWorkers, s.processCreateEmail(ctx))
+	go s.Subscribe(sendEmailSubject, emailGroupName, sendEmailWorkers, s.processSendEmail(ctx))
 }
 
-func (s *emailSubscriber) createEmail(msg *stan.Msg) {
-	ctx, cancelFunc := context.WithTimeout(context.Background(), workerTimeout)
-	defer cancelFunc()
+func (s *emailSubscriber) processCreateEmail(ctx context.Context) stan.MsgHandler {
+	return func(msg *stan.Msg) {
+		span, ctx := opentracing.StartSpanFromContext(ctx, "emailSubscriber.processCreateEmail")
+		defer span.Finish()
 
-	span, ctx := opentracing.StartSpanFromContext(ctx, "emailSubscriber.createEmail")
-	defer span.Finish()
+		s.log.Infof("subscriber process Create Email: %s", msg.String())
+		totalSubscribeMessages.Inc()
 
-	s.log.Infof("subscriber createEmail message: %#v", msg)
-	totalSubscribeMessages.Inc()
-
-	var m models.Email
-	if err := json.Unmarshal(msg.Data, &m); err != nil {
-		errorSubscribeMessages.Inc()
-		s.log.Errorf("json.Unmarshal : %v", err)
-		return
-	}
-
-	if err := retry.Do(func() error {
-		return s.emailUC.Create(ctx, &m)
-	},
-		retry.Attempts(retryAttempts),
-		retry.Delay(retryDelay),
-		retry.Context(ctx),
-	); err != nil {
-		errorSubscribeMessages.Inc()
-		s.log.Errorf("emailUC.Create : %v", err)
-
-		if msg.Redelivered && msg.RedeliveryCount > maxRedeliveryCount {
-			if err := s.publishErrorMessage(ctx, msg, err); err != nil {
-				s.log.Errorf("publishErrorMessage : %v", err)
-				return
-			}
-			if err := msg.Ack(); err != nil {
-				s.log.Errorf("msg.Ack: %v", err)
-				return
-			}
+		var m models.Email
+		if err := json.Unmarshal(msg.Data, &m); err != nil {
+			errorSubscribeMessages.Inc()
+			s.log.Errorf("json.Unmarshal : %v", err)
+			return
 		}
-		return
-	}
 
-	if err := msg.Ack(); err != nil {
-		s.log.Errorf("msg.Ack: %v", err)
+		if err := retry.Do(func() error {
+			return s.emailUC.Create(ctx, &m)
+		},
+			retry.Attempts(retryAttempts),
+			retry.Delay(retryDelay),
+			retry.Context(ctx),
+		); err != nil {
+			errorSubscribeMessages.Inc()
+			s.log.Errorf("emailUC.Create : %v", err)
+
+			if msg.Redelivered && msg.RedeliveryCount > maxRedeliveryCount {
+				if err := s.publishErrorMessage(ctx, msg, err); err != nil {
+					s.log.Errorf("publishErrorMessage : %v", err)
+					return
+				}
+				if err := msg.Ack(); err != nil {
+					s.log.Errorf("msg.Ack: %v", err)
+					return
+				}
+			}
+			return
+		}
+
+		if err := msg.Ack(); err != nil {
+			s.log.Errorf("msg.Ack: %v", err)
+		}
+		successSubscribeMessages.Inc()
 	}
-	successSubscribeMessages.Inc()
 }
 
-func (s *emailSubscriber) sendEmail(msg *stan.Msg) {
-	ctx, cancelFunc := context.WithTimeout(context.Background(), workerTimeout)
-	defer cancelFunc()
+func (s *emailSubscriber) processSendEmail(ctx context.Context) stan.MsgHandler {
+	return func(msg *stan.Msg) {
+		span, ctx := opentracing.StartSpanFromContext(ctx, "emailSubscriber.processSendEmail")
+		defer span.Finish()
 
-	span, ctx := opentracing.StartSpanFromContext(ctx, "emailSubscriber.sendEmail")
-	defer span.Finish()
+		s.log.Infof("subscriber process Send Email: %s", msg.String())
+		totalSubscribeMessages.Inc()
 
-	s.log.Infof("subscriber sendEmail message: %#v", msg)
-	totalSubscribeMessages.Inc()
-
-	var m models.Email
-	if err := json.Unmarshal(msg.Data, &m); err != nil {
-		errorSubscribeMessages.Inc()
-		s.log.Errorf("json.Unmarshal : %v", err)
-		return
-	}
-
-	if err := retry.Do(func() error {
-		return s.emailUC.SendEmail(ctx, &m)
-	},
-		retry.Attempts(retryAttempts),
-		retry.Delay(retryDelay),
-		retry.Context(ctx),
-	); err != nil {
-		errorSubscribeMessages.Inc()
-		s.log.Errorf("emailUC.SendEmail : %v", err)
-
-		if msg.Redelivered && msg.RedeliveryCount > maxRedeliveryCount {
-			if err := s.publishErrorMessage(ctx, msg, err); err != nil {
-				s.log.Errorf("publishErrorMessage : %v", err)
-				return
-			}
-			if err := msg.Ack(); err != nil {
-				s.log.Errorf("msg.Ack: %v", err)
-				return
-			}
+		var m models.Email
+		if err := json.Unmarshal(msg.Data, &m); err != nil {
+			errorSubscribeMessages.Inc()
+			s.log.Errorf("json.Unmarshal : %v", err)
+			return
 		}
-		return
-	}
 
-	if err := msg.Ack(); err != nil {
-		s.log.Errorf("msg.Ack: %v", err)
+		if err := retry.Do(func() error {
+			return s.emailUC.SendEmail(ctx, &m)
+		},
+			retry.Attempts(retryAttempts),
+			retry.Delay(retryDelay),
+			retry.Context(ctx),
+		); err != nil {
+			errorSubscribeMessages.Inc()
+			s.log.Errorf("emailUC.SendEmail : %v", err)
+
+			if msg.Redelivered && msg.RedeliveryCount > maxRedeliveryCount {
+				if err := s.publishErrorMessage(ctx, msg, err); err != nil {
+					s.log.Errorf("publishErrorMessage : %v", err)
+					return
+				}
+				if err := msg.Ack(); err != nil {
+					s.log.Errorf("msg.Ack: %v", err)
+					return
+				}
+			}
+			return
+		}
+
+		if err := msg.Ack(); err != nil {
+			s.log.Errorf("msg.Ack: %v", err)
+		}
+		successSubscribeMessages.Inc()
 	}
-	successSubscribeMessages.Inc()
 }
 
 func (s *emailSubscriber) publishErrorMessage(ctx context.Context, msg *stan.Msg, err error) error {
