@@ -93,7 +93,7 @@ func (s *server) Run() error {
 
 	go func() {
 		emailSubscriber := nats.NewEmailSubscriber(s.natsConn, s.log, emailUC, validate)
-		emailSubscriber.Run()
+		emailSubscriber.Run(ctx)
 	}()
 
 	go func() {
