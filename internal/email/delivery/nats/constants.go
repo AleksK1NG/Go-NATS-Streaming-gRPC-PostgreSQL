@@ -16,6 +16,4 @@ const (
 
 	deadLetterQueueSubject = "mail:errors"
 	maxRedeliveryCount     = 3
-
-	workerTimeout = 15 * time.Second
 )

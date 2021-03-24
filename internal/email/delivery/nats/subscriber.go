@@ -175,7 +175,7 @@ func (s *emailSubscriber) processSendEmail(ctx context.Context) stan.MsgHandler 
 }
 
 func (s *emailSubscriber) publishErrorMessage(ctx context.Context, msg *stan.Msg, err error) error {
-	span, ctx := opentracing.StartSpanFromContext(ctx, "emailSubscriber.publishErrorMessage")
+	span, _ := opentracing.StartSpanFromContext(ctx, "emailSubscriber.publishErrorMessage")
 	defer span.Finish()
 
 	s.log.Infof("publish dead letter queue message: %v", msg)
