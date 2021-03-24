@@ -13,7 +13,7 @@ import (
 	"github.com/AleksK1NG/nats-streaming/internal/email/delivery/nats"
 	"github.com/AleksK1NG/nats-streaming/internal/interceptors"
 	"github.com/AleksK1NG/nats-streaming/internal/middlewares"
-	"github.com/AleksK1NG/nats-streaming/pkg/email"
+	"github.com/AleksK1NG/nats-streaming/pkg/smtp"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/reflection"
 
@@ -80,7 +80,7 @@ func (s *server) Run() error {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	smtpClient := email.NewSmtpClient(s.cfg)
+	smtpClient := smtp.NewSmtpClient(s.cfg)
 	publisher := nats.NewPublisher(s.natsConn)
 	emailPgRepo := repository.NewEmailPGRepository(s.pgxPool)
 	emailRedisRepo := repository.NewEmailRedisRepository(s.redis)

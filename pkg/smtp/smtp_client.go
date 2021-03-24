@@ -1,4 +1,4 @@
-package email
+package smtp
 
 import (
 	"crypto/tls"
@@ -9,6 +9,7 @@ import (
 	mail "github.com/xhit/go-simple-mail/v2"
 )
 
+// SMTPClient interface
 type SMTPClient interface {
 	SendMail(mail *models.MailData) error
 }
@@ -17,6 +18,7 @@ type smtpClient struct {
 	cfg *config.Config
 }
 
+// NewSmtpClient constructor
 func NewSmtpClient(cfg *config.Config) *smtpClient {
 	return &smtpClient{cfg: cfg}
 }
