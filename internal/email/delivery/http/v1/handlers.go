@@ -120,13 +120,13 @@ func (h *emailHandlers) Search() echo.HandlerFunc {
 		if err != nil {
 			h.log.Errorf("strconv.Atoi: %v", err)
 			errorRequests.Inc()
-			return httpErrors.ErrorCtxResponse(c, httpErrors.BadRequest)
+			return httpErrors.ErrorCtxResponse(c, err)
 		}
 		size, err := strconv.Atoi(c.QueryParam("size"))
 		if err != nil {
 			h.log.Errorf("strconv.Atoi: %v", err)
 			errorRequests.Inc()
-			return httpErrors.ErrorCtxResponse(c, httpErrors.BadRequest)
+			return httpErrors.ErrorCtxResponse(c, err)
 		}
 
 		pq := utils.NewPaginationQuery(size, page)
@@ -135,7 +135,7 @@ func (h *emailHandlers) Search() echo.HandlerFunc {
 		if err != nil {
 			h.log.Errorf("emailUC.Search: %v", err)
 			errorRequests.Inc()
-			return httpErrors.ErrorCtxResponse(c, httpErrors.BadRequest)
+			return httpErrors.ErrorCtxResponse(c, err)
 		}
 
 		successRequests.Inc()

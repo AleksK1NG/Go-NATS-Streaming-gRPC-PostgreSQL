@@ -4,11 +4,11 @@
 # Docker
 
 develop:
-	echo "Starting develop docker compose"
+	@echo Starting develop docker compose
 	docker-compose -f docker-compose.yaml up --build
 
 local:
-	echo "Starting develop docker compose"
+	@echo Starting develop docker compose
 	docker-compose -f docker-compose.local.yaml up --build
 
 upload:
@@ -45,7 +45,7 @@ deps-cleancache:
 # Linters
 
 run-linter:
-	echo "Starting linters"
+	@echo Starting linters
 	golangci-lint run ./...
 
 
@@ -69,7 +69,7 @@ logs-local:
 # Make local SSL Certificate
 
 cert:
-	echo "Generating SSL certificates"
+	@echo Generating SSL certificates
 	cd ./ssl && sh instructions.sh
 	cd ..
 	cd ./nginx && openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout nginx-selfsigned.key -out nginx-selfsigned.crt
@@ -100,5 +100,5 @@ migrate_down:
 # Swagger
 
 swagger:
-	echo "Starting swagger generating"
+	@echo Starting swagger generating
 	swag init -g **/**/*.go
